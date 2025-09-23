@@ -1,0 +1,119 @@
+{
+  "tradeId": null,
+  "version": null,
+  "bookName": "FX-BOOK-1",
+  "counterpartyName": "BigBank",
+  "traderUserName": "alice",
+  "inputterUserName": "alice",
+  "tradeType": "Swap",
+  "tradeSubType": "Barrier",
+  "tradeStatus": null,
+  "tradeDate": "2025-06-10T00:00:00",
+  "startDate": "2025-06-10T00:00:00",
+  "maturityDate": "2026-06-10T00:00:00",
+  "executionDate": "2025-06-10T00:00:00",
+  "utiCode": "13",
+  "lastTouchTimestamp": "2025-06-10T00:00:00",
+  "validityStartDate": "2025-06-10T00:00:00",
+  "tradeLegs": [
+    {
+      "legId": null,
+      "legType": "Fixed",
+      "notional": 1000000,
+      "currency": "USD",
+      "rate": "1.0",
+      "index": null,
+      "calculationPeriodSchedule": "Quarterly",
+      "paymentBusinessDayConvention": "Modified Following",
+      "payReceiveFlag": "Pay",
+      "cashflows": [
+        {
+          "id": null,
+          "paymentValue": 255555.56,
+          "valueDate": "2025-09-10",
+          "payRec": "Pay",
+          "paymentType": "Fixed",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": 1
+        },
+        {
+          "id": null,
+          "paymentValue": 252777.78,
+          "valueDate": "2025-12-10",
+          "payRec": "Pay",
+          "paymentType": "Fixed",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": 1
+        },
+        {
+          "id": null,
+          "paymentValue": 250000,
+          "valueDate": "2026-03-10",
+          "payRec": "Pay",
+          "paymentType": "Fixed",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": 1
+        },
+        {
+          "id": null,
+          "paymentValue": 255555.56,
+          "valueDate": "2026-06-10",
+          "payRec": "Pay",
+          "paymentType": "Fixed",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": 1
+        }
+      ]
+    },
+    {
+      "legId": null,
+      "legType": "Floating",
+      "notional": 1000000,
+      "currency": "USD",
+      "rate": null,
+      "index": "LIBOR",
+      "calculationPeriodSchedule": "Quarterly",
+      "paymentBusinessDayConvention": "Modified Following",
+      "payReceiveFlag": "Rec",
+      "cashflows": [
+        {
+          "id": null,
+          "paymentValue": 0,
+          "valueDate": "2025-09-10",
+          "payRec": "Rec",
+          "paymentType": "Floating",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": null
+        },
+        {
+          "id": null,
+          "paymentValue": 0,
+          "valueDate": "2025-12-10",
+          "payRec": "Rec",
+          "paymentType": "Floating",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": null
+        },
+        {
+          "id": null,
+          "paymentValue": 0,
+          "valueDate": "2026-03-10",
+          "payRec": "Rec",
+          "paymentType": "Floating",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": null
+        },
+        {
+          "id": null,
+          "paymentValue": 0,
+          "valueDate": "2026-06-10",
+          "payRec": "Rec",
+          "paymentType": "Floating",
+          "paymentBusinessDayConvention": "Modified Following",
+          "rate": null
+        }
+      ]
+    }
+  ],
+  "validityEndDate": null
+}
