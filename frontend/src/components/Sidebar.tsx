@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useSearchParams} from 'react-router-dom';
 import Button from './Button';
 
 const navItems = [
@@ -14,9 +14,10 @@ const navItems = [
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const handleSideBarClick = () => {
-        // setSearchParams({view: param});
+    const handleSideBarClick = (param: string) => {
+        setSearchParams({view: param});
     }
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);

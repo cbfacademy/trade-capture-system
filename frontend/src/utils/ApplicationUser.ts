@@ -3,10 +3,10 @@ export interface ApplicationUser {
   firstName: string;
   lastName: string;
   loginId: string;
-  password?: string; // Optional, write-only
+  password?: string;
   active: boolean;
-  userProfile: string; // Profile name/value, not ID
+  userProfile: string;
   version: number;
-  lastModifiedTimestamp: string; // ISO string
+  lastModifiedTimestamp: string;
 }
 

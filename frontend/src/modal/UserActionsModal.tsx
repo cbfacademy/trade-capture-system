@@ -10,7 +10,7 @@ import staticStore from "../stores/staticStore";
 import {SingleUserModal} from "./SingleUserModal";
 import {ApplicationUser} from "../utils/ApplicationUser";
 
-// Returns an empty user object
+
 function getDefaultUser(): Partial<ApplicationUser> {
     return {
         id: 0,
@@ -84,14 +84,14 @@ export const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ use
         }
     };
 
-    // Save user handler
+
     const handleSaveUser = async () => {
         setLoading(true);
         try {
-            // Ensure only plain fields are sent to the backend
+
             const { id, firstName, lastName, loginId, password, active, userProfile } = user || {};
             let userProfileValue = userProfile;
-            // If userProfile is an object, use its value property, otherwise use as is
+
             if (userProfileValue && typeof userProfileValue === 'object') {
                 userProfileValue = userProfileValue.value || userProfileValue.label || "";
             }

@@ -67,7 +67,8 @@ export const AllUserView: React.FC = observer(() => {
 
     const handleEditUser = () => {
         if (currentUser) {
-            // TODO: Implement user editing functionality
+            setSnackbarOpen(true);
+            setSnackbarMsg(`Opening edit form for user: ${currentUser.firstName} ${currentUser.lastName}`);
             console.log('Edit user:', currentUser);
         }
     }

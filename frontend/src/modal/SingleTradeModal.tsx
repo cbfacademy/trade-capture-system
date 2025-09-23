@@ -60,7 +60,6 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
         setLoading(true)
         if (!editableTrade) return;
         try {
-            // Map each leg to the backend's expected DTO structure
             const legsDto = editableTrade.tradeLegs.map(leg => ({
                 legType: leg.legType,
                 notional: typeof leg.notional === 'string' ? parseFloat(leg.notional) : leg.notional,
@@ -79,7 +78,6 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
 
             const allCashflows: CashflowDTO[] = response.data;
 
-            // Assign cashflows to respective legs by payRec (Pay/Rec) and legType
             const updatedLegs = editableTrade.tradeLegs.map(leg => ({
                 ...leg,
                 cashflows: allCashflows.filter(cf =>
@@ -139,13 +137,13 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
 
         try {
             if (editableTrade.tradeId) {
-                // Update existing trade
+
                 await api.put(`/trades/${editableTrade.tradeId}`, tradeDto);
                 setSnackbarMsg(`Trade updated successfully! Trade ID: ${editableTrade.tradeId}`);
                 setSnackbarType('success');
                 setSnackbarOpen(true);
 
-                // Fetch the updated trade to ensure the view shows the most recent data
+
                 const response = await api.get(`/trades/${editableTrade.tradeId}`);
                 const updatedTrade = formatDatesFromBackend(response.data);
                 setEditableTrade(updatedTrade);
@@ -176,7 +174,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
      */
     const handleTerminateTrade = async () => {
         setLoading(true)
-        // Check if trade ID exists and validate if the trade is in a terminable state
+
         if (!editableTrade?.tradeId) {
             setSnackbarMsg('Cannot terminate: Trade ID is missing');
             setSnackbarType('error');
@@ -184,7 +182,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
             return;
         }
 
-        // Prevent terminating already terminated trades
+
         if (editableTrade.tradeStatus === 'TERMINATED') {
             setSnackbarMsg('This trade has already been terminated');
             setSnackbarType('error');
@@ -193,22 +191,22 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
         }
 
         try {
-            // Call the terminate endpoint
+
             await api.post(`/trades/${editableTrade.tradeId}/terminate`);
 
-            // Show success message
+
             setSnackbarMsg(`Trade ${editableTrade.tradeId} terminated successfully!`);
             setSnackbarType('success');
             setSnackbarOpen(true);
 
-            // Update the trade status locally to show the terminated state
+
             setEditableTrade(prev => prev ? {
                 ...prev,
                 tradeStatus: 'TERMINATED'
             } : prev);
 
         } catch (error) {
-            // Show error message with details
+
             const errorMessage = error instanceof Error
                 ? error.message
                 : 'An unknown error occurred while terminating the trade';
@@ -217,7 +215,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
             setSnackbarType('error');
             setSnackbarOpen(true);
         } finally {
-            // Reset snackbar state after a timeout
+
             setTimeout(() => {
                 setSnackbarOpen(false);
                 setSnackbarMsg("");
@@ -227,8 +225,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
         }
     };
 
-    // Assign 2 trade legs from the trade (if available)
-    // Use the full array for updates, only slice for rendering
+
     const tradeLegs = editableTrade?.tradeLegs ? editableTrade.tradeLegs.slice(0, 2) : [];
 
     return (

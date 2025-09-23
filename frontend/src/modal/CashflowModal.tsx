@@ -10,7 +10,7 @@ interface CashflowModalProps {
 }
 
 const CashflowModal: React.FC<CashflowModalProps> = ({ isOpen, onClose, cashflows }) => {
-  // Group cashflows by leg (Pay/Rec + Type)
+
   const leg1Cashflows = cashflows.filter(
     cf => cf.payRec?.toLowerCase() === 'pay' && cf.paymentType?.toLowerCase() === 'fixed'
   );
@@ -27,7 +27,6 @@ const CashflowModal: React.FC<CashflowModalProps> = ({ isOpen, onClose, cashflow
   ];
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 flex items-start justify-center">
-      {/* Animated background overlay */}
       <div
         aria-hidden="true"
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}

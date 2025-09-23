@@ -15,7 +15,7 @@ interface UserDetailModalProps {
     setUser: React.Dispatch<React.SetStateAction<ApplicationUser | null>>;
 }
 
-// Field configuration array for clarity and maintainability
+
 const USER_FIELDS = [
     {key: "firstName", label: "First Name", type: "input"},
     {key: "lastName", label: "Last Name", type: "input"},
@@ -40,12 +40,12 @@ export const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) 
         }
     }, []);
 
-    // Generic handler for all fields
+
     const handleFieldChange = (field: keyof ApplicationUser, value: unknown) => {
         setUser(u => u ? {...u, [field]: value} : u);
     };
 
-    // Render as a single div (like SingleTradeModal)
+
     return (
         <div className="bg-violet-50 mt-10 w-full max-w-xl mx-auto rounded-lg shadow-lg p-8 flex flex-col gap-4 items-center">
             <h2 className="text-2xl font-semibold text-center mb-4">Add or Edit User</h2>

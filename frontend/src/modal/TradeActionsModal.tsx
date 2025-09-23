@@ -24,8 +24,8 @@ export const TradeActionsModal: React.FC = observer(() => {
     const {isSuccess, error} = useQuery({
         queryKey: ["staticValues"],
         queryFn: () => staticStore.fetchAllStaticValues(),
-        refetchInterval: 30000, // 30 seconds in ms
-        refetchOnWindowFocus: false, // Optional: disable on tab focus
+        refetchInterval: 30000,
+        refetchOnWindowFocus: false,
     });
 
     React.useEffect(() => {
@@ -45,7 +45,6 @@ export const TradeActionsModal: React.FC = observer(() => {
         try {
             const tradeResponse = await api.get(`/trades/${tradeId}`);
             if (tradeResponse.status === 200) {
-                // Convert date fields to Date objects
                 const convertToDate = (val: string | undefined) => val ? new Date(val) : undefined;
                 const tradeData = tradeResponse.data;
                 const dateFields = [
@@ -56,7 +55,7 @@ export const TradeActionsModal: React.FC = observer(() => {
                     'lastTouchTimestamp',
                     'validityStartDate'
                 ];
-                // Helper to format Date to yyyy-mm-dd
+
                 const formatDateForInput = (date: Date | undefined) =>
                     date ? date.toISOString().slice(0, 10) : undefined;
                 dateFields.forEach(field => {
@@ -68,12 +67,9 @@ export const TradeActionsModal: React.FC = observer(() => {
                 if (Array.isArray(tradeData.tradeLegs)) {
                     console.log(`Found ${tradeData.tradeLegs.length} trade legs in the response`);
                     tradeData.tradeLegs = tradeData.tradeLegs.map((leg: TradeLeg) => {
-                        // If any date fields exist in legs, convert here as well
-                        // Ensure leg data is properly structured for the UI
                         console.log("Processing leg:", leg);
                         return {
                             ...leg,
-                            // Ensure these properties exist even if null for the UI
                             legId: leg.legId || '',
                             legType: leg.legType || '',
                             rate: leg.rate !== undefined ? leg.rate : '',
@@ -82,7 +78,6 @@ export const TradeActionsModal: React.FC = observer(() => {
                     });
                 } else {
                     console.warn("No trade legs found in the response!");
-                    // Initialize with empty array to prevent null reference errors
                     tradeData.tradeLegs = [];
                 }
                 setTrade(tradeData);
@@ -109,7 +104,6 @@ export const TradeActionsModal: React.FC = observer(() => {
             setTradeId("")
         }
     };
-    // Add a handler to fully clear all trade state and cache
     const handleClearAll = () => {
         setTrade(null);
         setTradeId("");
