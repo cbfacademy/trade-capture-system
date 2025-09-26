@@ -1,0 +1,28 @@
+{
+  "name": "Java 21 + Node.js 18 Dev",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "installMaven": true,
+      "installGradle": false
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "github.codespaces"
+      ]
+    }
+  },
+
+  "postCreateCommand": "java -version && mvn -v && node -v && npm -v"
+}
