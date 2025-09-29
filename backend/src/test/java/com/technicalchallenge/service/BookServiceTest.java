@@ -35,6 +35,10 @@ public class BookServiceTest {
         Book book = new Book();
         book.setId(1L);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        // Define the output of the mock mapper to simulate successful DTO conversion because a mock returns null by default.
+        BookDTO expectedDto = new BookDTO();
+        expectedDto.setId(1L);
+        when(bookMapper.toDto(book)).thenReturn(expectedDto);
         Optional<BookDTO> found = bookService.getBookById(1L);
         assertTrue(found.isPresent());
         assertEquals(1L, found.get().getId());
