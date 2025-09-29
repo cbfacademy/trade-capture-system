@@ -52,6 +52,12 @@ public class BookServiceTest {
         bookDTO.setId(2L);
         when(bookRepository.save(any(Book.class))).thenReturn(book);
 
+        // When the mapper is called to convert the DTO to an Entity, return the mock Book entity.
+        when(bookMapper.toEntity(bookDTO)).thenReturn(book);
+
+        // When the mapper is called to convert the Entity back to a DTO, return the mock BookDTO.
+        when(bookMapper.toDto(book)).thenReturn(bookDTO);
+
         BookDTO saved = bookService.saveBook(bookDTO);
         assertNotNull(saved);
         assertEquals(2L, saved.getId());
