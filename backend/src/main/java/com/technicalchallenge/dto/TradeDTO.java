@@ -1,6 +1,8 @@
 package com.technicalchallenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,7 +45,10 @@ public class TradeDTO {
     private LocalDateTime deactivatedDate;
 
     // Book reference
+    //I added @NotNull to bookId and @NotBlank to bookName as they are required fields when creating a trade.
+    @NotNull(message = "Book ID is required")
     private Long bookId;
+    @NotBlank(message = "Book name is required")
     private String bookName;
 
     // Counterparty reference

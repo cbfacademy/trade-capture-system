@@ -141,7 +141,10 @@ public class TradeController {
         logger.info("Deleting trade with id: {}", id);
         try {
             tradeService.deleteTrade(id);
-            return ResponseEntity.ok().body("Trade cancelled successfully");
+            /*The return response was changed from ResponseEntity.ok().body("Trade cancelled successfully");
+             * to ResponseEntity.noContent().build(); as no response body is needed for a delete operation.
+             */
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             logger.error("Error deleting trade: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Error deleting trade: " + e.getMessage());
