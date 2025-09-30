@@ -2,9 +2,16 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.ApplicationUser;
+import com.technicalchallenge.model.Book;
+import com.technicalchallenge.model.Counterparty;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.repository.ApplicationUserRepository;
+import com.technicalchallenge.repository.BookRepository;
 import com.technicalchallenge.repository.CashflowRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
 import com.technicalchallenge.repository.TradeRepository;
 import com.technicalchallenge.repository.TradeStatusRepository;
@@ -21,6 +28,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,11 +50,26 @@ class TradeServiceTest {
     @Mock
     private AdditionalInfoService additionalInfoService;
 
+    @Mock
+    private BookRepository bookRepository;
+
+    @Mock
+    private CounterpartyRepository counterpartyRepository;
+
+    @Mock
+    private ApplicationUserRepository applicationUserRepository;
+
     @InjectMocks
     private TradeService tradeService;
 
     private TradeDTO tradeDTO;
     private Trade trade;
+    private Book mockBook;
+    private Counterparty mockCounterparty;
+    private TradeStatus mockTradeStatus;
+    private ApplicationUser mockTraderUser;
+    private TradeLeg mockTradeLeg;
+
 
     @BeforeEach
     void setUp() {
@@ -55,6 +79,9 @@ class TradeServiceTest {
         tradeDTO.setTradeDate(LocalDate.of(2025, 1, 15));
         tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 17));
         tradeDTO.setTradeMaturityDate(LocalDate.of(2026, 1, 17));
+        tradeDTO.setBookName("TEST_BOOK");
+        tradeDTO.setCounterpartyName("TEST_CP");
+        tradeDTO.setTraderUserName("TEST_TRADER");
 
         TradeLegDTO leg1 = new TradeLegDTO();
         leg1.setNotional(BigDecimal.valueOf(1000000));
@@ -66,6 +93,14 @@ class TradeServiceTest {
 
         tradeDTO.setTradeLegs(Arrays.asList(leg1, leg2));
 
+        
+        mockBook = new Book();
+        mockCounterparty = new Counterparty();
+        mockTradeStatus = new TradeStatus();
+        mockTraderUser = new ApplicationUser();
+        mockTradeLeg = new TradeLeg();
+        mockTradeLeg.setLegId(1L);
+
         trade = new Trade();
         trade.setId(1L);
         trade.setTradeId(100001L);
@@ -75,6 +110,11 @@ class TradeServiceTest {
     void testCreateTrade_Success() {
         // Given
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+        when(bookRepository.findByBookName(anyString())).thenReturn(Optional.of(mockBook));
+        when(counterpartyRepository.findByName(anyString())).thenReturn(Optional.of(mockCounterparty));
+        when(tradeStatusRepository.findByTradeStatus("NEW")).thenReturn(Optional.of(mockTradeStatus));
+        when(applicationUserRepository.findByFirstName(anyString())).thenReturn(Optional.of(mockTraderUser));
+        when(tradeLegRepository.save(any(TradeLeg.class))).thenReturn(mockTradeLeg);
 
         // When
         Trade result = tradeService.createTrade(tradeDTO);
@@ -83,6 +123,9 @@ class TradeServiceTest {
         assertNotNull(result);
         assertEquals(100001L, result.getTradeId());
         verify(tradeRepository).save(any(Trade.class));
+        verify(bookRepository).findByBookName(anyString());
+        verify(counterpartyRepository).findByName(anyString());
+        verify(tradeLegRepository, times(2)).save(any(TradeLeg.class));
     }
 
     @Test
