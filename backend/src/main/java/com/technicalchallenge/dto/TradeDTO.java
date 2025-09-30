@@ -20,6 +20,9 @@ import java.util.List;
 public class TradeDTO {
     private Long id;
 
+    //Added @JsonProperty to map JSON field "tradeId" to Java field "tradeId"
+    //This ensures that when JSON data with "tradeId" is deserialized, it correctly
+    @JsonProperty("tradeId")
     private Long tradeId;
 
     private Integer version;
