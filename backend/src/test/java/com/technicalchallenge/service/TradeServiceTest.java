@@ -104,6 +104,7 @@ class TradeServiceTest {
         trade = new Trade();
         trade.setId(1L);
         trade.setTradeId(100001L);
+        trade.setVersion(1);
     }
 
     @Test
@@ -186,6 +187,7 @@ class TradeServiceTest {
         when(tradeRepository.findByTradeIdAndActiveTrue(100001L)).thenReturn(Optional.of(trade));
         when(tradeStatusRepository.findByTradeStatus("AMENDED")).thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+        when(tradeLegRepository.save(any(TradeLeg.class))).thenReturn(mockTradeLeg);
 
         // When
         Trade result = tradeService.amendTrade(100001L, tradeDTO);
@@ -193,6 +195,7 @@ class TradeServiceTest {
         // Then
         assertNotNull(result);
         verify(tradeRepository, times(2)).save(any(Trade.class)); // Save old and new
+        verify(tradeLegRepository, times(2)).save(any(TradeLeg.class));
     }
 
     @Test
