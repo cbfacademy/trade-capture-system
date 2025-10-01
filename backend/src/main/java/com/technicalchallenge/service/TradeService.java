@@ -116,7 +116,10 @@ public class TradeService {
 
         // If this is an existing trade (has ID), handle as amendment
         if (trade.getId() != null) {
-            return amendTrade(trade.getTradeId(), tradeDTO);
+            /*THIS SHOULD BE amendTrade(trade.getId(), tradeDTO);
+            because we validated using the database primary key and not the DTO tradeId
+            so if we need to amend an existing trade, we must use the database ID*/
+            return amendTrade(trade.getId(), tradeDTO);
         } else {
             return createTrade(tradeDTO);
         }
@@ -258,12 +261,12 @@ public class TradeService {
     }
 
     @Transactional
-    public Trade amendTrade(Long tradeId, TradeDTO tradeDTO) {
-        logger.info("Amending trade with ID: {}", tradeId);
+    public Trade amendTrade(Long TradeId, TradeDTO tradeDTO) {
+        logger.info("Amending trade with ID: {}", TradeId);
 
-        Optional<Trade> existingTradeOpt = getTradeById(tradeId);
+        Optional<Trade> existingTradeOpt = getTradeById(TradeId);
         if (existingTradeOpt.isEmpty()) {
-            throw new RuntimeException("Trade not found: " + tradeId);
+            throw new RuntimeException("Trade not found: " + TradeId);
         }
 
         Trade existingTrade = existingTradeOpt.get();
@@ -275,7 +278,7 @@ public class TradeService {
 
         // Create new version
         Trade amendedTrade = mapDTOToEntity(tradeDTO);
-        amendedTrade.setTradeId(tradeId);
+        amendedTrade.setTradeId(tradeDTO.getTradeId()); // Ensures tradeId is copied
         amendedTrade.setVersion(existingTrade.getVersion() + 1);
         amendedTrade.setActive(true);
         amendedTrade.setCreatedDate(LocalDateTime.now());

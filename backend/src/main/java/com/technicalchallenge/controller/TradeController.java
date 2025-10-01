@@ -98,6 +98,7 @@ public class TradeController {
         }
     }
 
+    
     @PutMapping("/{id}")
     @Operation(summary = "Update existing trade",
                description = "Updates an existing trade with new information. Subject to business rule validation and user privileges.")
