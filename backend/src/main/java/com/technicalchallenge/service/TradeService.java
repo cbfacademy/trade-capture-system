@@ -2,6 +2,7 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.exceptions.TradeValidationException;
 import com.technicalchallenge.model.*;
 import com.technicalchallenge.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,7 +174,8 @@ public class TradeService {
                 } else {
                     logger.warn("Trader user not found with firstName: {}", firstName);
                     // Try with loginId as fallback
-                    Optional<ApplicationUser> byLoginId = applicationUserRepository.findByLoginId(tradeDTO.getTraderUserName().toLowerCase());
+                    Optional<ApplicationUser> byLoginId = applicationUserRepository
+                            .findByLoginId(tradeDTO.getTraderUserName().toLowerCase());
                     if (byLoginId.isPresent()) {
                         trade.setTraderUser(byLoginId.get());
                         logger.debug("Found trader user by loginId: {}", tradeDTO.getTraderUserName());
@@ -197,11 +199,13 @@ public class TradeService {
                 Optional<ApplicationUser> userOpt = applicationUserRepository.findByFirstName(firstName);
                 if (userOpt.isPresent()) {
                     trade.setTradeInputterUser(userOpt.get());
-                    logger.debug("Found inputter user: {} {}", userOpt.get().getFirstName(), userOpt.get().getLastName());
+                    logger.debug("Found inputter user: {} {}", userOpt.get().getFirstName(),
+                            userOpt.get().getLastName());
                 } else {
                     logger.warn("Inputter user not found with firstName: {}", firstName);
                     // Try with loginId as fallback
-                    Optional<ApplicationUser> byLoginId = applicationUserRepository.findByLoginId(tradeDTO.getInputterUserName().toLowerCase());
+                    Optional<ApplicationUser> byLoginId = applicationUserRepository
+                            .findByLoginId(tradeDTO.getInputterUserName().toLowerCase());
                     if (byLoginId.isPresent()) {
                         trade.setTradeInputterUser(byLoginId.get());
                         logger.debug("Found inputter user by loginId: {}", tradeDTO.getInputterUserName());
@@ -222,7 +226,8 @@ public class TradeService {
             Optional<TradeType> tradeTypeOpt = tradeTypeRepository.findByTradeType(tradeDTO.getTradeType());
             if (tradeTypeOpt.isPresent()) {
                 trade.setTradeType(tradeTypeOpt.get());
-                logger.debug("Found trade type: {} with ID: {}", tradeTypeOpt.get().getTradeType(), tradeTypeOpt.get().getId());
+                logger.debug("Found trade type: {} with ID: {}", tradeTypeOpt.get().getTradeType(),
+                        tradeTypeOpt.get().getId());
             } else {
                 logger.warn("Trade type not found: {}", tradeDTO.getTradeType());
             }
@@ -232,7 +237,8 @@ public class TradeService {
         }
 
         if (tradeDTO.getTradeSubType() != null) {
-            Optional<TradeSubType> tradeSubTypeOpt = tradeSubTypeRepository.findByTradeSubType(tradeDTO.getTradeSubType());
+            Optional<TradeSubType> tradeSubTypeOpt = tradeSubTypeRepository
+                    .findByTradeSubType(tradeDTO.getTradeSubType());
             if (tradeSubTypeOpt.isPresent()) {
                 trade.setTradeSubType(tradeSubTypeOpt.get());
             } else {
@@ -337,6 +343,7 @@ public class TradeService {
     }
 
     private void validateTradeCreation(TradeDTO tradeDTO) {
+
         // Validate dates - Fixed to use consistent field names
         if (tradeDTO.getTradeStartDate() != null && tradeDTO.getTradeDate() != null) {
             if (tradeDTO.getTradeStartDate().isBefore(tradeDTO.getTradeDate())) {
@@ -348,7 +355,6 @@ public class TradeService {
                 throw new RuntimeException("Maturity date cannot be before start date");
             }
         }
-
         // Validate trade has exactly 2 legs
         if (tradeDTO.getTradeLegs() == null || tradeDTO.getTradeLegs().size() != 2) {
             throw new RuntimeException("Trade must have exactly 2 legs");
@@ -530,7 +536,8 @@ public class TradeService {
                         throw new RuntimeException("Invalid schedule format: " + schedule);
                     }
                 }
-                throw new RuntimeException("Invalid schedule format: " + schedule + ". Supported formats: Monthly, Quarterly, Semi-annually, Annually, or 1M, 3M, 6M, 12M");
+                throw new RuntimeException("Invalid schedule format: " + schedule
+                        + ". Supported formats: Monthly, Quarterly, Semi-annually, Annually, or 1M, 3M, 6M, 12M");
         }
     }
 
@@ -585,7 +592,8 @@ public class TradeService {
 
     // NEW METHOD: Generate the next trade ID (sequential)
     private Long generateNextTradeId() {
-        // For simplicity, using a static variable. In real scenario, this should be atomic and thread-safe.
+        // For simplicity, using a static variable. In real scenario, this should be
+        // atomic and thread-safe.
         return 10000L + tradeRepository.count();
     }
 }

@@ -44,11 +44,12 @@ public class TradeDTO {
 
     // Book reference
     private Long bookId;
+    @NotNull(message = "Book and Counterparty are required")
     private String bookName;
 
     // Counterparty reference
     private Long counterpartyId;
-    @NotNull(message = "Counterparty name is required")
+    @NotNull(message = "Book and Counterparty are required")
     private String counterpartyName;
 
     // User references
