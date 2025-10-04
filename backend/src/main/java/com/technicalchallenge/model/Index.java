@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "index_table")
-public class Index {
+public class Index {// Entity to represent an Index
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

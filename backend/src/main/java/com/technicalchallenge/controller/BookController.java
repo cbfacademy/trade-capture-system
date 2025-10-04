@@ -20,20 +20,20 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/books")
 @Validated
-public class BookController {
+public class BookController {//Purpose of this controller - to manage book-related operations such as retrieving, creating, and deleting books.
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
-    @Autowired
+    @Autowired // Injecting BookService to handle business logic
     private BookService bookService;
 
 
-    @GetMapping
+    @GetMapping // Endpoint to retrieve all books
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         logger.info("Fetching all books");
         return ResponseEntity.ok().body(bookService.getAllBooks());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint to retrieve a book by its ID
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
         logger.debug("Fetching book by id: {}", id);
         return bookService.getBookById(id)
@@ -41,7 +41,7 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping // Endpoint to create a new book
     public ResponseEntity<?> createBook(@Valid @RequestBody BookDTO bookDTO) {
         logger.info("Creating new book: {}", bookDTO);
         if (bookDTO.getBookName() == null || bookDTO.getBookName().isBlank()) {
@@ -54,7 +54,7 @@ public class BookController {
         return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Endpoint to delete a book by its ID
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         logger.warn("Deleting book with id: {}", id);
         bookService.deleteBook(id);
@@ -62,7 +62,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/values")
+    @GetMapping("/values") // Endpoint to retrieve all book names
     public List<String> getAllBookNames() {
         return bookService.getAllBooks().stream()
                 .map(BookDTO::getBookName)

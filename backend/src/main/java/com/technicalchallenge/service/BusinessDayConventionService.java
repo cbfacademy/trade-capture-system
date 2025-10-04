@@ -12,12 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class BusinessDayConventionService {
+public class BusinessDayConventionService {// Service class for managing BusinessDayConvention entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(BusinessDayConventionService.class);
 
+    // Injected repository
     @Autowired
     private BusinessDayConventionRepository businessDayConventionRepository;
 
+    // CRUD operations
     public List<BusinessDayConvention> findAll() {
         logger.info("Retrieving all business day conventions");
         return businessDayConventionRepository.findAll();

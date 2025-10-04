@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+// Repository interface for managing Schedule entities in the database
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<Schedule> findBySchedule(String schedule);
 }

@@ -17,14 +17,17 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class BookService {
+public class BookService {// Service class for managing Book entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
-
+    // Injected repositories and mapper
     private final BookRepository bookRepository;
     private final CostCenterRepository costCenterRepository;
     private final BookMapper bookMapper;
 
+    // CRUD operations
     public List<BookDTO> getAllBooks() {
         logger.info("Retrieving all books");
         return bookRepository.findAll().stream()

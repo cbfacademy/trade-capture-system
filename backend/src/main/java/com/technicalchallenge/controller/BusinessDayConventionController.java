@@ -13,19 +13,19 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/businessDayConventions")
-public class BusinessDayConventionController {
+public class BusinessDayConventionController {// Purpose of this controller - to manage business day conventions, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(BusinessDayConventionController.class);
 
-    @Autowired
+    @Autowired // Injecting BusinessDayConventionService to handle business logic
     private BusinessDayConventionService businessDayConventionService;
 
-    @GetMapping
+    @GetMapping // Endpoint to retrieve all business day conventions
     public List<BusinessDayConvention> getAll() {
         logger.info("Fetching all business day conventions");
         return businessDayConventionService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint to retrieve a business day convention by its ID
     public ResponseEntity<BusinessDayConvention> getById(@PathVariable Long id) {
         logger.debug("Fetching business day convention by id: {}", id);
         return businessDayConventionService.findById(id)
@@ -33,13 +33,13 @@ public class BusinessDayConventionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping // Endpoint to create a new business day convention
     public BusinessDayConvention create(@RequestBody BusinessDayConvention businessDayConvention) {
         logger.info("Creating new business day convention: {}", businessDayConvention);
         return businessDayConventionService.save(businessDayConvention);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")// Endpoint to update an existing business day convention
     public ResponseEntity<BusinessDayConvention> update(@PathVariable Long id, @RequestBody BusinessDayConvention businessDayConvention) {
         return businessDayConventionService.findById(id)
                 .map(existing -> {
@@ -49,7 +49,7 @@ public class BusinessDayConventionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Endpoint to delete a business day convention by its ID
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting business day convention with id: {}", id);
         if (businessDayConventionService.findById(id).isPresent()) {
@@ -59,7 +59,7 @@ public class BusinessDayConventionController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/values")
+    @GetMapping("/values") // Endpoint to retrieve all business day convention values
     public List<String> getAllBusinessDayConventionValues() {
         logger.info("Fetching all business day convention values");
         return businessDayConventionService.findAll().stream()

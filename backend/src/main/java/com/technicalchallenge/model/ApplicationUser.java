@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "application_user")
-public class ApplicationUser {
+public class ApplicationUser {// Entity to represent application users
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,12 +28,14 @@ public class ApplicationUser {
     private int version;
     private LocalDateTime lastModifiedTimestamp;
 
+    // Lifecycle callbacks to manage versioning and timestamps
     @PrePersist
     public void prePersist() {
         this.lastModifiedTimestamp = java.time.LocalDateTime.now();
         this.version = 1;
     }
 
+    // Lifecycle callbacks to manage versioning and timestamps
     @PreUpdate
     public void preUpdate() {
         this.lastModifiedTimestamp = java.time.LocalDateTime.now();

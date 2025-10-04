@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeDTO {
+public class TradeDTO {//DTO for transferring trade data
     private Long id;
 
     private Long tradeId;

@@ -19,9 +19,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class TradeService {
+public class TradeService {// Service class for managing Trade entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(TradeService.class);
 
+    // Injected repositories
     @Autowired
     private TradeRepository tradeRepository;
     @Autowired
@@ -57,6 +60,7 @@ public class TradeService {
     @Autowired
     private AdditionalInfoService additionalInfoService;
 
+    // CRUD operations
     public List<Trade> getAllTrades() {
         logger.info("Retrieving all trades");
         return tradeRepository.findAll();

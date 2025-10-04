@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+// Repository interface for managing Book entities in the database
 public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findByBookName(String bookName);
 }

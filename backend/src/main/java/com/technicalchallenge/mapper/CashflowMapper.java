@@ -13,16 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CashflowMapper {
+public class CashflowMapper {// Mapper for Cashflow and CashflowDTO
+
+    // Inject ModelMapper, PayRecRepository, LegTypeRepository, BusinessDayConventionRepository.
     @Autowired
     private ModelMapper modelMapper;
+    
     @Autowired
     private PayRecRepository payRecRepository;
+
     @Autowired
     private LegTypeRepository legTypeRepository;
+
     @Autowired
     private BusinessDayConventionRepository businessDayConventionRepository;
 
+    // Convert Cashflow entity to CashflowDTO
     public CashflowDTO toDto(Cashflow entity) {
         CashflowDTO dto = new CashflowDTO();
         dto.setId(entity.getId());
@@ -35,6 +41,7 @@ public class CashflowMapper {
         return dto;
     }
 
+    // Convert CashflowDTO to Cashflow entity
     public Cashflow toEntity(CashflowDTO dto) {
         Cashflow entity = new Cashflow();
         entity.setId(dto.getId());

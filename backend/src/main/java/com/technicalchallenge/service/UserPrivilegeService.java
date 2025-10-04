@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserPrivilegeService {
+public class UserPrivilegeService {// Service class for managing UserPrivilege entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(UserPrivilegeService.class);
 
+    // Injected repository
     @Autowired
     private UserPrivilegeRepository userPrivilegeRepository;
 
+    // CRUD operations
     public List<UserPrivilege> getAllUserPrivileges() {
         logger.info("Retrieving all user privileges");
         return userPrivilegeRepository.findAll();

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+// Repository interface for managing Trade entities in the database
 public interface TradeRepository extends JpaRepository<Trade, Long> {
     // Existing methods
     List<Trade> findByTradeId(Long tradeId);

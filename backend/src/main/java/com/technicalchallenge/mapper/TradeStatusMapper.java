@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TradeStatusMapper {
+public class TradeStatusMapper {// Mapper for TradeStatus and TradeStatusDTO
+
+    // Inject ModelMapper
     @Autowired
     private ModelMapper modelMapper;
 
+    // Convert TradeStatus entity to TradeStatusDTO
     public TradeStatusDTO toDto(TradeStatus entity) {
         return modelMapper.map(entity, TradeStatusDTO.class);
     }
 
+    // Convert TradeStatusDTO to TradeStatus entity
     public TradeStatus toEntity(TradeStatusDTO dto) {
         return modelMapper.map(dto, TradeStatus.class);
     }

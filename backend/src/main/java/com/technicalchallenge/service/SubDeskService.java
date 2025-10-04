@@ -13,15 +13,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SubDeskService {
+public class SubDeskService {// Service class for managing SubDesk entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(SubDeskService.class);
 
+    // Injected repositories
     @Autowired
     private SubDeskRepository subDeskRepository;
 
+    // Injected DeskRepository to handle Desk references
     @Autowired
     private DeskRepository deskRepository;
 
+    // CRUD operations
     public List<SubDesk> getAllSubDesks() {
         logger.info("Retrieving all subdesks");
         return subDeskRepository.findAll();

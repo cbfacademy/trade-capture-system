@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/schedules")
-public class ScheduleController {
+public class ScheduleController {// Purpose of this controller - to manage schedules, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
 
+    // Injecting ScheduleService to handle business logic
     @Autowired
     private ScheduleService scheduleService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private ScheduleMapper scheduleMapper;
 
+    // Endpoint to retrieve all schedules
     @GetMapping
     public List<ScheduleDTO> getAll() {
         logger.info("Fetching all schedules");
@@ -32,6 +35,7 @@ public class ScheduleController {
                 .toList();
     }
 
+    // Endpoint to retrieve a schedule by its ID
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching schedule by id: {}", id);
@@ -41,6 +45,7 @@ public class ScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new schedule
     @PostMapping
     public ScheduleDTO create(@RequestBody ScheduleDTO scheduleDTO) {
         logger.info("Creating new schedule: {}", scheduleDTO);
@@ -48,6 +53,7 @@ public class ScheduleController {
         return scheduleMapper.toDto(scheduleService.save(entity));
     }
 
+    // Endpoint to update an existing schedule
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleDTO> update(@PathVariable Long id, @RequestBody ScheduleDTO scheduleDTO) {
         return scheduleService.findById(id)
@@ -59,6 +65,7 @@ public class ScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a schedule by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting schedule with id: {}", id);
@@ -69,6 +76,7 @@ public class ScheduleController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint to retrieve all schedule values
     @GetMapping("/values")
     public List<String> getAllScheduleValues() {
         logger.info("Fetching all schedule values");

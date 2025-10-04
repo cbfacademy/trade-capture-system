@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+// Repository interface for managing PayRec entities in the database
 public interface PayRecRepository extends JpaRepository<PayRec, Long> {
     Optional<PayRec> findByPayRec(String payRec);
 }

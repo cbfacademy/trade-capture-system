@@ -34,15 +34,15 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/api/cashflows")
 @Validated
 @Tag(name = "Cashflows", description = "Cashflow generation and management for trades")
-public class CashflowController {
+public class CashflowController {// Purpose of this controller - to manage cashflows, including creating, retrieving, deleting, and generating cashflows based on trade legs and schedules.
     private static final Logger logger = LoggerFactory.getLogger(CashflowController.class);
 
-    @Autowired
+    @Autowired // Injecting CashflowService to handle business logic
     private CashflowService cashflowService;
     @Autowired
     private CashflowMapper cashflowMapper;
 
-    @GetMapping
+    @GetMapping // Endpoint to retrieve all cashflows
     @Operation(summary = "Get all cashflows",
                description = "Retrieves a list of all generated cashflows in the system with payment dates and amounts")
     @ApiResponses(value = {
@@ -58,7 +58,7 @@ public class CashflowController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint to retrieve a cashflow by its ID
     @Operation(summary = "Get cashflow by ID",
                description = "Retrieves a specific cashflow by its unique identifier")
     @ApiResponses(value = {
@@ -78,7 +78,7 @@ public class CashflowController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping // Endpoint to create a new cashflow
     @Operation(summary = "Create new cashflow",
                description = "Adds a new cashflow to the system with the specified payment details")
     @ApiResponses(value = {
@@ -103,7 +103,7 @@ public class CashflowController {
         return ResponseEntity.ok(cashflowMapper.toDto(saved));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Endpoint to delete a cashflow by its ID
     @Operation(summary = "Delete cashflow",
                description = "Removes a cashflow from the system by its unique identifier")
     @ApiResponses(value = {
@@ -117,7 +117,7 @@ public class CashflowController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/generate")
+    @PostMapping("/generate") // Endpoint to generate cashflows based on trade legs and schedule
     @Operation(summary = "Generate cashflows",
                description = "Creates a series of cashflows based on trade legs and specified generation parameters")
     @ApiResponses(value = {
@@ -167,6 +167,7 @@ public class CashflowController {
         return ResponseEntity.ok(allCashflows);
     }
 
+    // Helper method to convert schedule string to number of months
     private int scheduleToMonths(String schedule) {
         if (schedule == null) return 0;
         schedule = schedule.toLowerCase();

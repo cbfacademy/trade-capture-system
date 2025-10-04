@@ -13,7 +13,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "user_privilege")
 @IdClass(UserPrivilegeId.class)
-public class UserPrivilege {
+public class UserPrivilege {// Entity to represent the association between User and Privilege
     @Id
     private Long userId;
 

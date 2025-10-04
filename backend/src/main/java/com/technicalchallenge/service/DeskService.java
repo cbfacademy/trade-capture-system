@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DeskService {
+public class DeskService {// Service class for managing Desk entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(DeskService.class);
 
+    // Injected repository
     @Autowired
     private DeskRepository deskRepository;
 
+    // CRUD operations
     public List<Desk> getAllDesks() {
         logger.info("Retrieving all desks");
         return deskRepository.findAll();

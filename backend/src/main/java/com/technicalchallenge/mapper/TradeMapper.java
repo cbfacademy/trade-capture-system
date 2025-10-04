@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class TradeMapper {
+public class TradeMapper {// Mapper for Trade and TradeDTO
 
+    // Inject ModelMapper
     @Autowired
     private ModelMapper modelMapper;
 
+    // Convert Trade entity to TradeDTO
     public TradeDTO toDto(Trade trade) {
         if (trade == null) {
             return null;
@@ -86,6 +88,7 @@ public class TradeMapper {
         return dto;
     }
 
+    // Convert TradeDTO to Trade entity
     public Trade toEntity(TradeDTO dto) {
         if (dto == null) {
             return null;

@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "trade_leg")
-public class TradeLeg {
+public class TradeLeg {// Entity to represent a Trade Leg
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long legId;

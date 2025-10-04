@@ -28,14 +28,18 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/api/trades")
 @Validated
 @Tag(name = "Trades", description = "Trade management operations including booking, searching, and lifecycle management")
-public class TradeController {
+public class TradeController {// Purpose of this controller - to manage trades, including creating, retrieving, updating, deleting, terminating, and cancelling them.
     private static final Logger logger = LoggerFactory.getLogger(TradeController.class);
 
+    // Injecting TradeService to handle business logic
     @Autowired
     private TradeService tradeService;
+
+    // Mapper to convert between entity and DTO
     @Autowired
     private TradeMapper tradeMapper;
 
+    // Endpoint to retrieve all trades
     @GetMapping
     @Operation(summary = "Get all trades",
                description = "Retrieves a list of all trades in the system. Returns comprehensive trade information including legs and cashflows.")
@@ -52,6 +56,7 @@ public class TradeController {
                 .toList();
     }
 
+    // Endpoint to retrieve a trade by its ID
     @GetMapping("/{id}")
     @Operation(summary = "Get trade by ID",
                description = "Retrieves a specific trade by its unique identifier")
@@ -72,6 +77,7 @@ public class TradeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //  Endpoint to create a new trade
     @PostMapping
     @Operation(summary = "Create new trade",
                description = "Creates a new trade with the provided details. Automatically generates cashflows and validates business rules.")
@@ -98,6 +104,7 @@ public class TradeController {
         }
     }
 
+    // Endpoint to update an existing trade
     @PutMapping("/{id}")
     @Operation(summary = "Update existing trade",
                description = "Updates an existing trade with new information. Subject to business rule validation and user privileges.")
@@ -126,6 +133,7 @@ public class TradeController {
         }
     }
 
+    // Endpoint to delete a trade by its ID
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete trade",
                description = "Deletes an existing trade. This is a soft delete that changes the trade status.")
@@ -148,6 +156,7 @@ public class TradeController {
         }
     }
 
+    // Endpoint to terminate a trade
     @PostMapping("/{id}/terminate")
     @Operation(summary = "Terminate trade",
                description = "Terminates an existing trade before its natural maturity date")
@@ -173,6 +182,7 @@ public class TradeController {
         }
     }
 
+    // Endpoint to cancel a trade
     @PostMapping("/{id}/cancel")
     @Operation(summary = "Cancel trade",
                description = "Cancels an existing trade by changing its status to cancelled")

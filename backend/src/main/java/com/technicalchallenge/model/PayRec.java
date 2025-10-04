@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pay_rec")
-public class PayRec {
+public class PayRec {// Entity to represent a Pay/Rec
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -16,8 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CashflowService {
+public class CashflowService {// Service class for managing Cashflow entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(CashflowService.class);
+
+    // Injected repositories
     @Autowired
     private CashflowRepository cashflowRepository;
     @Autowired
@@ -27,6 +31,7 @@ public class CashflowService {
     @Autowired
     private BusinessDayConventionRepository businessDayConventionRepository;
 
+    // CRUD operations
     public List<Cashflow> getAllCashflows() {
         logger.info("Retrieving all cashflows");
         return cashflowRepository.findAll();
@@ -55,6 +60,7 @@ public class CashflowService {
         cashflowRepository.deleteById(id);
     }
 
+    // Populate reference data based on names provided in DTO
     public void populateReferenceDataByName(Cashflow cashflow, CashflowDTO dto) {
         if (dto.getPayRec() != null) {
             cashflow.setPayRec(payRecRepository.findAll().stream()

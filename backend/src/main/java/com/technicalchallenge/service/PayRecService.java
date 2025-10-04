@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PayRecService {
+public class PayRecService {// Service class for managing PayRec entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(PayRecService.class);
 
+    // Injected repository
     @Autowired
     private PayRecRepository payRecRepository;
 
+    // CRUD operations
     public List<PayRec> findAll() {
         logger.info("Retrieving all pay recs");
         return payRecRepository.findAll();

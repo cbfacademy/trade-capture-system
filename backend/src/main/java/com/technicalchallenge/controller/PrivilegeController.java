@@ -19,15 +19,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/privileges")
-public class PrivilegeController {
+public class PrivilegeController {// Purpose of this controller - to manage privileges, including creating, retrieving, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(PrivilegeController.class);
 
+    // Injecting PrivilegeService to handle business logic
     @Autowired
     private PrivilegeService privilegeService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private PrivilegeMapper privilegeMapper;
 
+    // Endpoint to retrieve all privileges
     @GetMapping
     public List<PrivilegeDTO> getAllPrivileges() {
         logger.info("Fetching all privileges");
@@ -36,6 +39,7 @@ public class PrivilegeController {
                 .toList();
     }
 
+    // Endpoint to retrieve a privilege by its ID
     @GetMapping("/{id}")
     public ResponseEntity<PrivilegeDTO> getPrivilegeById(@PathVariable Long id) {
         logger.debug("Fetching privilege by id: {}", id);
@@ -45,6 +49,7 @@ public class PrivilegeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new privilege
     @PostMapping
     public ResponseEntity<PrivilegeDTO> createPrivilege(@Valid @RequestBody PrivilegeDTO privilegeDTO) {
         logger.info("Creating new privilege: {}", privilegeDTO);
@@ -52,6 +57,7 @@ public class PrivilegeController {
         return ResponseEntity.created(URI.create("/api/privileges/" + savedPrivilege.getId())).body(privilegeMapper.toDto(savedPrivilege));
     }
 
+    // Endpoint to delete a privilege by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrivilege(@PathVariable Long id) {
         logger.warn("Deleting privilege with id: {}", id);

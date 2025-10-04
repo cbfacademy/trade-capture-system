@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LegTypeService {
+public class LegTypeService {// Service class for managing LegType entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(LegTypeService.class);
 
+    // Injected repository
     @Autowired
     private LegTypeRepository legTypeRepository;
 
+    // CRUD operations
     public List<LegType> findAll() {
         logger.info("Retrieving all leg types");
         return legTypeRepository.findAll();

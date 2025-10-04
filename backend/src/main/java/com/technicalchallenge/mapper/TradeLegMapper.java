@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-public class TradeLegMapper {
+public class TradeLegMapper {// Mapper for TradeLeg and TradeLegDTO
+
+    // Inject Repositories and CashflowMapper
     @Autowired
     private CurrencyRepository currencyRepository;
     @Autowired
@@ -28,6 +30,7 @@ public class TradeLegMapper {
     @Autowired
     private CashflowMapper cashflowMapper;
 
+    // Convert TradeLeg entity to TradeLegDTO
     public TradeLegDTO toDto(TradeLeg entity) {
         TradeLegDTO dto = new TradeLegDTO();
         dto.setLegId(entity.getLegId());
@@ -47,6 +50,7 @@ public class TradeLegMapper {
         return dto;
     }
 
+    // Convert TradeLegDTO to TradeLeg entity
     public TradeLeg toEntity(TradeLegDTO dto) {
         TradeLeg entity = new TradeLeg();
         entity.setLegId(dto.getLegId());

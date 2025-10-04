@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDTO {
+public class UserDTO {//DTO for transferring user data
     private Long id;
     private String firstName;
     private String lastName;

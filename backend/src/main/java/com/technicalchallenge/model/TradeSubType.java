@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "trade_sub_type")
-public class TradeSubType {
+public class TradeSubType {// Entity to represent a Trade Sub Type
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

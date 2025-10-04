@@ -14,16 +14,20 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class ApplicationUserService {
+public class ApplicationUserService {// Service class for managing ApplicationUser entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(ApplicationUserService.class);
     private final ApplicationUserRepository applicationUserRepository;
 
+    // Validate user credentials
     public boolean validateCredentials(String loginId, String password) {
         logger.debug("Validating credentials for user: {}", loginId);
         Optional<ApplicationUser> user = applicationUserRepository.findByLoginId(loginId);
         return user.map(applicationUser -> applicationUser.getPassword().equals(password)).orElse(false);
     }
 
+    // CRUD operations
     public List<ApplicationUser> getAllUsers() {
         logger.info("Retrieving all users");
         return applicationUserRepository.findAll();

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "book")
-public class Book {
+public class Book {// Entity to represent a Book
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +17,7 @@ public class Book {
     private boolean active;
     private int version;
 
+    // Many-to-one relationship with CostCenter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cost_center_id", referencedColumnName = "id")
     private CostCenter costCenter;

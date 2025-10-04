@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/currencies")
-public class CurrencyController {
+public class CurrencyController { // Purpose of this controller - to manage currencies, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(CurrencyController.class);
 
+    // Service to handle business logic
     @Autowired
     private CurrencyService currencyService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private CurrencyMapper currencyMapper;
 
+    // Endpoint to retrieve all currencies
     @GetMapping
     public List<CurrencyDTO> getAll() {
         logger.info("Fetching all currencies");
@@ -32,6 +35,7 @@ public class CurrencyController {
                 .toList();
     }
 
+    // Endpoint to retrieve a currency by its ID
     @GetMapping("/{id}")
     public ResponseEntity<CurrencyDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching currency by id: {}", id);
@@ -40,14 +44,16 @@ public class CurrencyController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    
+    // Endpoint to create a new currency
     @PostMapping
     public CurrencyDTO create(@RequestBody CurrencyDTO currencyDTO) {
         logger.info("Creating new currency: {}", currencyDTO);
         Currency entity = currencyMapper.toEntity(currencyDTO);
         return currencyMapper.toDto(currencyService.save(entity));
     }
-
+    
+    // Endpoint to update an existing currency
     @PutMapping("/{id}")
     public ResponseEntity<CurrencyDTO> update(@PathVariable Long id, @RequestBody CurrencyDTO currencyDTO) {
         return currencyService.findById(id)
@@ -59,6 +65,7 @@ public class CurrencyController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a currency by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting currency with id: {}", id);
@@ -68,7 +75,8 @@ public class CurrencyController {
         }
         return ResponseEntity.notFound().build();
     }
-
+    
+    // Endpoint to retrieve all currency values
     @GetMapping("/values")
     public List<String> getAllCurrencyValues() {
         logger.info("Fetching all currency values");

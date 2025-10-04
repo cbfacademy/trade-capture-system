@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "holiday_calendar")
-public class HolidayCalendar {
+public class HolidayCalendar {// Entity to represent a Holiday Calendar
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

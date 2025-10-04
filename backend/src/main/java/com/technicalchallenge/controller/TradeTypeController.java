@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/tradeTypes")
-public class TradeTypeController {
+public class TradeTypeController {// Purpose of this controller - to manage trade types, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(TradeTypeController.class);
 
+    // Injecting TradeTypeService to handle business logic
     @Autowired
     private TradeTypeService tradeTypeService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private TradeTypeMapper tradeTypeMapper;
 
+    // Endpoint to retrieve all trade types
     @GetMapping
     public List<TradeTypeDTO> getAll() {
         logger.info("Fetching all trade types");
@@ -32,6 +35,7 @@ public class TradeTypeController {
                 .toList();
     }
 
+    // Endpoint to retrieve a trade type by its ID
     @GetMapping("/{id}")
     public ResponseEntity<TradeTypeDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching trade type by id: {}", id);
@@ -41,6 +45,7 @@ public class TradeTypeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new trade type
     @PostMapping
     public TradeTypeDTO create(@RequestBody TradeTypeDTO tradeTypeDTO) {
         logger.info("Creating new trade type: {}", tradeTypeDTO);
@@ -48,6 +53,7 @@ public class TradeTypeController {
         return tradeTypeMapper.toDto(tradeTypeService.save(entity));
     }
 
+    // Endpoint to update an existing trade type
     @PutMapping("/{id}")
     public ResponseEntity<TradeTypeDTO> update(@PathVariable Long id, @RequestBody TradeTypeDTO tradeTypeDTO) {
         return tradeTypeService.findById(id)
@@ -59,6 +65,7 @@ public class TradeTypeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a trade type by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting trade type with id: {}", id);
@@ -69,6 +76,7 @@ public class TradeTypeController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint to retrieve all trade type values
     @GetMapping("/values")
     public List<String> getAllTradeTypeValues() {
         logger.info("Fetching all trade type values");

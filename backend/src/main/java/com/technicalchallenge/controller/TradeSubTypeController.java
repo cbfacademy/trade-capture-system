@@ -12,9 +12,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tradeSubTypes")
-public class TradeSubTypeController {
+public class TradeSubTypeController {// Purpose of this controller - to manage trade sub-types, including retrieving them.
+
+    // Injecting TradeSubTypeRepository to access trade sub-type data
     @Autowired
     private TradeSubTypeRepository tradeSubTypeRepository;
+
+    // Endpoint to retrieve all trade sub-type values
 
     @GetMapping("/values")
     public List<String> getTradeSubTypeValues() {
