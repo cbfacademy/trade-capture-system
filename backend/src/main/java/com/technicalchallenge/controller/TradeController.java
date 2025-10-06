@@ -111,6 +111,11 @@ public class TradeController {
             @Parameter(description = "Unique identifier of the trade to update", required = true) @PathVariable Long id,
             @Parameter(description = "Updated trade details", required = true) @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Updating trade with id: {}", id);
+
+        if (tradeDTO.getTradeId() != null && !tradeDTO.getTradeId().equals(id)) {
+            return ResponseEntity.badRequest().body("Trade ID in path must match Trade ID in request body");
+        }
+
         try {
             tradeDTO.setTradeId(id); // Ensure the ID matches
             Trade amendedTrade = tradeService.amendTrade(id, tradeDTO);
