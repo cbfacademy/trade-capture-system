@@ -117,9 +117,20 @@ public class TradeController {
         }
 
         try {
-            tradeDTO.setTradeId(id); // Ensure the ID matches
-            Trade amendedTrade = tradeService.amendTrade(id, tradeDTO);
-            TradeDTO responseDTO = tradeMapper.toDto(amendedTrade);
+            if (tradeDTO.getTradeId() == null) {
+                tradeDTO.setTradeId(id);
+            } // Ensure the ID matches
+
+            Trade trade = tradeMapper.toEntity(tradeDTO);
+            tradeService.populateReferenceDataByName(trade, tradeDTO);
+            Trade savedTrade = tradeService.saveTrade(trade, tradeDTO);
+
+            TradeDTO responseDTO = tradeMapper.toDto(savedTrade);
+
+            if (responseDTO.getTradeId() == null) {
+                responseDTO.setTradeId(id);
+            }
+
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             logger.error("Error updating trade: {}", e.getMessage(), e);
