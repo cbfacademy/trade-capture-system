@@ -130,23 +130,21 @@ public class BookServiceTest {
     }
 }
 
-/*
- * Developer Note:
- * I fixed the BookServiceTest by adding mock versions of the BookMapper and CostCenterRepository.
- * This allowed the test to run without depending on real database or mapping logic,
- * and all five tests passed successfully.
- *
- * Why this was needed:
- * - The BookService class uses constructor injection, which requires all dependencies to be provided.
- * - Originally, the test only mocked the BookRepository, so BookMapper and CostCenterRepository were null.
- * - That caused NullPointerExceptions during the test.
- *
- * What I did to fix it:
- * - Added @Mock annotations for both BookMapper and CostCenterRepository.
- * - Used Mockito's @InjectMocks to automatically inject all mocks into BookService.
- * - Added default mapping behavior in setUp() to simulate the real mapper's functionality.
- *
- * Result:
- * - Tests now run independently of the real database or MapStruct mapping.
- * - All five tests pass successfully, confirming the service logic works as expected.
+/*Development notes for commit message:
+ fix(test): BookServiceTest - Added missing mocks to stop NullPointerExceptions
+
+Problem: 
+All five tests in BookServiceTest were failing because of NullPointerExceptions.
+
+Root Cause: 
+BookService uses constructor injection, but the test only mocked BookRepository. 
+BookMapper and CostCenterRepository were not mocked, so they were null when BookService was created with @InjectMocks.
+
+Solution: 
+Added @Mock for BookMapper and CostCenterRepository and made sure they were injected into BookService using @InjectMocks. 
+Also added simple default behavior in setUp() to make the mapper work like the real one.
+
+Impact: 
+Now BookServiceTest can run on its own without needing a real database or MapStruct mapping, 
+and it confirms the service logic works correctly.
  */
