@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "schedule")
-public class Schedule {
+public class Schedule {// Entity to represent a Schedule
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

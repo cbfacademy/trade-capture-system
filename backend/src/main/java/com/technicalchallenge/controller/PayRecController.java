@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/payRecs")
-public class PayRecController {
+public class PayRecController {// Purpose of this controller - to manage pay/receive options, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(PayRecController.class);
 
+    // Injecting PayRecService to handle business logic
     @Autowired
     private PayRecService payRecService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private PayRecMapper payRecMapper;
 
+    // Endpoint to retrieve all pay/receive options
     @GetMapping
     public List<PayRecDTO> getAll() {
         logger.info("Fetching all pay recs");
@@ -32,6 +35,7 @@ public class PayRecController {
                 .toList();
     }
 
+    // Endpoint to retrieve a pay/receive option by its ID
     @GetMapping("/{id}")
     public ResponseEntity<PayRecDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching pay rec by id: {}", id);
@@ -41,6 +45,7 @@ public class PayRecController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new pay/receive option
     @PostMapping
     public PayRecDTO create(@RequestBody PayRecDTO payRecDTO) {
         logger.info("Creating new pay rec: {}", payRecDTO);
@@ -48,6 +53,7 @@ public class PayRecController {
         return payRecMapper.toDto(payRecService.save(entity));
     }
 
+    // Endpoint to update an existing pay/receive option
     @PutMapping("/{id}")
     public ResponseEntity<PayRecDTO> update(@PathVariable Long id, @RequestBody PayRecDTO payRecDTO) {
         return payRecService.findById(id)
@@ -59,6 +65,7 @@ public class PayRecController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a pay/receive option by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting pay rec with id: {}", id);
@@ -69,6 +76,7 @@ public class PayRecController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint to retrieve all pay/receive values
     @GetMapping("/values")
     public List<String> getAllPayRecValues() {
         logger.info("Fetching all pay/receive values");

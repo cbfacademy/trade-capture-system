@@ -20,14 +20,18 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/subdesks")
 @Validated
-public class SubDeskController {
+public class SubDeskController {// Purpose of this controller - to manage subdesks, including creating, retrieving, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(SubDeskController.class);
 
+    // Injecting SubDeskService to handle business logic
     @Autowired
     private SubDeskService subDeskService;
+
+    // Mapper to convert between entity and DTO
     @Autowired
     private SubDeskMapper subDeskMapper;
 
+    // Endpoint to retrieve all subdesks
     @GetMapping
     public List<SubDeskDTO> getAllSubDesks() {
         logger.info("Fetching all subdesks");
@@ -36,6 +40,7 @@ public class SubDeskController {
                 .toList();
     }
 
+    // Endpoint to retrieve a subdesk by its ID
     @GetMapping("/{id}")
     public ResponseEntity<SubDeskDTO> getSubDeskById(@PathVariable Long id) {
         logger.debug("Fetching subdesk by id: {}", id);
@@ -45,6 +50,7 @@ public class SubDeskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new subdesk
     @PostMapping
     public ResponseEntity<?> createSubDesk(@Valid @RequestBody SubDeskDTO subDeskDTO) {
         logger.info("Creating new subdesk: {}", subDeskDTO);
@@ -59,6 +65,7 @@ public class SubDeskController {
         return ResponseEntity.status(201).body(subDeskMapper.toDto(saved));
     }
 
+    // Endpoint to delete a subdesk by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubDesk(@PathVariable Long id) {
         logger.warn("Deleting subdesk with id: {}", id);
@@ -66,7 +73,7 @@ public class SubDeskController {
         return ResponseEntity.noContent().build();
     }
 
-
+    // Endpoint to retrieve all subdesk names
     @GetMapping("/values")
     public List<String> getAllSubDeskNames() {
         return subDeskService.getAllSubDesks().stream()

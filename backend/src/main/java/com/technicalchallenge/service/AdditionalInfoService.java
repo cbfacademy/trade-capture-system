@@ -14,14 +14,16 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class AdditionalInfoService {
+public class AdditionalInfoService {// Service class for managing AdditionalInfo entities
 
+    // Repository and ModelMapper injections
     @Autowired
     private AdditionalInfoRepository additionalInfoRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
+    // Retrieve all active additional info for a given entity type and ID
     public List<AdditionalInfoDTO> getAdditionalInfoForEntity(String entityType, Long entityId) {
         List<AdditionalInfo> additionalInfoList = additionalInfoRepository.findActiveByEntityTypeAndEntityId(entityType, entityId);
         return additionalInfoList.stream()
@@ -29,6 +31,7 @@ public class AdditionalInfoService {
                 .collect(Collectors.toList());
     }
 
+    // Add new additional info with version control
     public AdditionalInfoDTO addAdditionalInfo(AdditionalInfoDTO dto) {
         // Check if field already exists and deactivate old version
         AdditionalInfo existing = additionalInfoRepository.findActiveByEntityTypeAndEntityIdAndFieldName(
@@ -52,6 +55,7 @@ public class AdditionalInfoService {
         return modelMapper.map(saved, AdditionalInfoDTO.class);
     }
 
+    // Soft delete additional info by deactivating it
     public void removeAdditionalInfo(String entityType, Long entityId, String fieldName) {
         AdditionalInfo existing = additionalInfoRepository.findActiveByEntityTypeAndEntityIdAndFieldName(
                 entityType, entityId, fieldName);

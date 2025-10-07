@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "sub_desk")
-public class SubDesk {
+public class SubDesk {// Entity to represent a SubDesk
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

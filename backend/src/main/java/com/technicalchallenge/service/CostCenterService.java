@@ -14,15 +14,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CostCenterService {
+public class CostCenterService {// Service class for managing CostCenter entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(CostCenterService.class);
 
+    // Injected repositories
     @Autowired
     private CostCenterRepository costCenterRepository;
 
     @Autowired
     private SubDeskRepository subDeskRepository;
 
+    // CRUD operations
     public List<CostCenter> getAllCostCenters() {
         logger.info("Retrieving all cost centers");
         return costCenterRepository.findAll();

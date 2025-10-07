@@ -20,14 +20,18 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/tradeLegs")
 @Validated
-public class TradeLegController {
+public class TradeLegController {// Purpose of this controller - to manage trade legs, including creating, retrieving, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(TradeLegController.class);
 
+    // Injecting TradeLegService to handle business logic
     @Autowired
     private TradeLegService tradeLegService;
+
+    // Mapper to convert between entity and DTO
     @Autowired
     private TradeLegMapper tradeLegMapper;
 
+    // Endpoint to retrieve all trade legs
     @GetMapping
     public List<TradeLegDTO> getAllTradeLegs() {
         logger.info("Fetching all trade legs");
@@ -36,6 +40,7 @@ public class TradeLegController {
                 .toList();
     }
 
+    // Endpoint to retrieve a trade leg by its ID
     @GetMapping("/{id}")
     public ResponseEntity<TradeLegDTO> getTradeLegById(@PathVariable(name = "id") Long id) {
         logger.debug("Fetching trade leg by id: {}", id);
@@ -45,6 +50,7 @@ public class TradeLegController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new trade leg
     @PostMapping
     public ResponseEntity<?> createTradeLeg(@Valid @RequestBody TradeLegDTO tradeLegDTO) {
         logger.info("Creating new trade leg: {}", tradeLegDTO);
@@ -60,6 +66,7 @@ public class TradeLegController {
         return ResponseEntity.ok(tradeLegMapper.toDto(saved));
     }
 
+    // Endpoint to delete a trade leg by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTradeLeg(@PathVariable(name = "id") Long id) {
         logger.warn("Deleting trade leg with id: {}", id);

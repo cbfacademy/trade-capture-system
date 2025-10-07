@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class IndexService {
+public class IndexService {// Service class for managing Index entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(IndexService.class);
 
+    // Injected repository
     @Autowired
     private IndexRepository indexRepository;
 
+    // CRUD operations
     public List<Index> findAll() {
         logger.info("Retrieving all indexes");
         return indexRepository.findAll();

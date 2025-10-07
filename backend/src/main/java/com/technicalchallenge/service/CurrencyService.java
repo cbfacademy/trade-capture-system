@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CurrencyService {
+public class CurrencyService {// Service class for managing Currency entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
 
+    // Injected repository
     @Autowired
     private CurrencyRepository currencyRepository;
 
+    // CRUD operations
     public List<Currency> findAll() {
         logger.info("Retrieving all currencies");
         return currencyRepository.findAll();

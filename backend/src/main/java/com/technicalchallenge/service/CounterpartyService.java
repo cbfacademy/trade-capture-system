@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CounterpartyService {
+public class CounterpartyService {// Service class for managing Counterparty entities
+
+    // Injected repository
     @Autowired
     private CounterpartyRepository counterpartyRepository;
 
+    // CRUD operations
     public List<Counterparty> getAllCounterparties() {
         return counterpartyRepository.findAll();
     }

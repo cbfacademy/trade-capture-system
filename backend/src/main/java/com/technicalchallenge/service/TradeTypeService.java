@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TradeTypeService {
+public class TradeTypeService {// Service class for managing TradeType entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(TradeTypeService.class);
 
+    // Injected repository
     @Autowired
     private TradeTypeRepository tradeTypeRepository;
 
+    // CRUD operations
     public List<TradeType> findAll() {
         logger.info("Retrieving all trade types");
         return tradeTypeRepository.findAll();

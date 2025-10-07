@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserProfileService {
+public class UserProfileService {// Service class for managing UserProfile entities
+
+    // Injected repository
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    // CRUD operations
     public List<UserProfile> getAllUserProfiles() {
         return userProfileRepository.findAll();
     }

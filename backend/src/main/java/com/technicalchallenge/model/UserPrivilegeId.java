@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class UserPrivilegeId implements Serializable {
+public class UserPrivilegeId implements Serializable {// Composite key class for UserPrivilege
     private Long userId;
     private Long privilegeId;
 }

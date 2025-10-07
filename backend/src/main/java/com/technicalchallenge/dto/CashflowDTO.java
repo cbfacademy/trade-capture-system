@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CashflowDTO {
+public class CashflowDTO {//DTO for transferring cashflow data
     private Long id;
     private Long legId;
     private BigDecimal paymentValue;

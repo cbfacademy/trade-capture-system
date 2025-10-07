@@ -9,16 +9,18 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "cost_center")
-public class CostCenter {
+public class CostCenter {// Entity to represent a Cost Center
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String costCenterName;
 
+    // Many-to-one relationship with SubDesk
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subdesk_id", referencedColumnName = "id")
     private SubDesk subDesk;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }

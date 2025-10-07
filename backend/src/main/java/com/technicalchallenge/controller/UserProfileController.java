@@ -11,12 +11,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/userProfiles")
-public class UserProfileController {
+public class UserProfileController {// Purpose of this controller - to manage user profiles, including creating, retrieving, updating, and deleting them.
+   
+   // Injecting UserProfileService to handle business logic
     @Autowired
     private UserProfileService userProfileService;
+
+    // Mapper to convert between entity and DTO
     @Autowired
     private UserProfileMapper userProfileMapper;
 
+    // Endpoint to retrieve all user profiles
     @GetMapping
     public List<UserProfileDTO> getAllUserProfiles() {
         return userProfileService.getAllUserProfiles().stream()
@@ -24,6 +29,7 @@ public class UserProfileController {
                 .toList();
     }
 
+    // Endpoint to retrieve a user profile by its ID
     @GetMapping("/{id}")
     public ResponseEntity<UserProfileDTO> getUserProfileById(@PathVariable Long id) {
         return userProfileService.getUserProfileById(id)
@@ -32,11 +38,13 @@ public class UserProfileController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new user profile
     @PostMapping
     public UserProfileDTO createUserProfile(@RequestBody UserProfileDTO userProfileDTO) {
         return userProfileMapper.toDto(userProfileService.saveUserProfile(userProfileMapper.toEntity(userProfileDTO)));
     }
 
+    // Endpoint to update an existing user profile
     @PutMapping("/{id}")
     public ResponseEntity<UserProfileDTO> updateUserProfile(@PathVariable Long id, @RequestBody UserProfileDTO userProfileDTO) {
         return userProfileService.updateUserProfile(id, userProfileMapper.toEntity(userProfileDTO))
@@ -44,6 +52,7 @@ public class UserProfileController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a user profile by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserProfile(@PathVariable Long id) {
         if (userProfileService.deleteUserProfile(id)) {

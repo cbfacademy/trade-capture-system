@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/tradeStatus")
-public class TradeStatusController {
+public class TradeStatusController {// Purpose of this controller - to manage trade statuses, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(TradeStatusController.class);
 
+    // Injecting TradeStatusService to handle business logic
     @Autowired
     private TradeStatusService tradeStatusService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private TradeStatusMapper tradeStatusMapper;
 
+    // Endpoint to retrieve all trade statuses
     @GetMapping
     public List<TradeStatusDTO> getAll() {
         logger.info("Fetching all trade statuses");
@@ -32,6 +35,7 @@ public class TradeStatusController {
                 .toList();
     }
 
+    // Endpoint to retrieve a trade status by its ID
     @GetMapping("/{id}")
     public ResponseEntity<TradeStatusDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching trade status by id: {}", id);
@@ -41,6 +45,7 @@ public class TradeStatusController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new trade status
     @PostMapping
     public TradeStatusDTO create(@RequestBody TradeStatusDTO tradeStatusDTO) {
         logger.info("Creating new trade status: {}", tradeStatusDTO);
@@ -48,6 +53,7 @@ public class TradeStatusController {
         return tradeStatusMapper.toDto(tradeStatusService.save(entity));
     }
 
+    // Endpoint to update an existing trade status
     @PutMapping("/{id}")
     public ResponseEntity<TradeStatusDTO> update(@PathVariable Long id, @RequestBody TradeStatusDTO tradeStatusDTO) {
         return tradeStatusService.findById(id)
@@ -59,6 +65,7 @@ public class TradeStatusController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete a trade status by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting trade status with id: {}", id);
@@ -69,6 +76,7 @@ public class TradeStatusController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint to retrieve all trade status values
     @GetMapping("/values")
     public List<String> getAllTradeStatusValues() {
         logger.info("Fetching all trade status values");

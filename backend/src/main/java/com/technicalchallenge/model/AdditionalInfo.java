@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "additional_info")
-public class AdditionalInfo {
+public class AdditionalInfo {// Entity to store additional dynamic fields for various entities
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+// Repository interface for managing BusinessDayConvention entities in the database
 public interface BusinessDayConventionRepository extends JpaRepository<BusinessDayConvention, Long> {
     Optional<BusinessDayConvention> findByBdc(String bdc);
 }

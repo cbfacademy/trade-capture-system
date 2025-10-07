@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CounterpartyDTO {
+public class CounterpartyDTO {//DTO for transferring counterparty data
     private Long id;
     private String name;
     private String address;

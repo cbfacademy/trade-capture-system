@@ -15,15 +15,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/indices")
-public class IndexController {
+public class IndexController {// Purpose of this controller - to manage indices, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    // Injecting IndexService to handle business logic
     @Autowired
     private IndexService indexService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private IndexMapper indexMapper;
 
+    // Endpoint to retrieve all indices
     @GetMapping
     public List<IndexDTO> getAll() {
         logger.info("Fetching all indexes");
@@ -32,6 +35,7 @@ public class IndexController {
                 .toList();
     }
 
+    // Endpoint to retrieve an index by its ID
     @GetMapping("/{id}")
     public ResponseEntity<IndexDTO> getById(@PathVariable Long id) {
         logger.debug("Fetching index by id: {}", id);
@@ -40,7 +44,8 @@ public class IndexController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    
+    // Endpoint to create a new index
     @PostMapping
     public ResponseEntity<IndexDTO> createIndex(@RequestBody IndexDTO indexDTO) {
         logger.info("Creating new index: {}", indexDTO);
@@ -48,6 +53,7 @@ public class IndexController {
         return ResponseEntity.ok(indexMapper.toDto(saved));
     }
 
+    // Endpoint to update an existing index
     @PutMapping("/{id}")
     public ResponseEntity<IndexDTO> update(@PathVariable Long id, @RequestBody IndexDTO indexDTO) {
         return indexService.findById(id)
@@ -59,6 +65,7 @@ public class IndexController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint to delete an index by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.warn("Deleting index with id: {}", id);
@@ -69,6 +76,7 @@ public class IndexController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint to retrieve all index values
     @GetMapping("/values")
     public List<String> getAllIndexValues() {
         logger.info("Fetching all index values");

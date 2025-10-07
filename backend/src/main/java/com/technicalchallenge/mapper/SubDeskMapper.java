@@ -9,19 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SubDeskMapper {
+public class SubDeskMapper {// Mapper for SubDesk and SubDeskDTO
+
+    // Inject ModelMapper and DeskRepository
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private DeskRepository deskRepository;
 
+    // Convert SubDesk entity to SubDeskDTO
     public SubDeskDTO toDto(SubDesk entity) {
         SubDeskDTO dto = modelMapper.map(entity, SubDeskDTO.class);
         dto.setDeskName(entity.getDesk() != null ? entity.getDesk().getDeskName() : null);
         return dto;
     }
 
+    // Convert SubDeskDTO to SubDesk entity
     public SubDesk toEntity(SubDeskDTO dto) {
         SubDesk entity = modelMapper.map(dto, SubDesk.class);
         if (dto.getDeskName() != null) {

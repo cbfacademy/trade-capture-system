@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/login")
 @Validated
 @AllArgsConstructor
-public class AuthorizationController {
+public class AuthorizationController {// Purpose of this controller - to authenticate users based on their username and an authorization token.
 
-    private final AuthorizationService authorizationService;
+    private final AuthorizationService authorizationService;// Service to handle authentication logic
 
 
-    @PostMapping("/{userName}")
+    @PostMapping("/{userName}") // Endpoint to handle login requests
     public ResponseEntity<?> login(@PathVariable(name = "userName") String userName, @RequestParam(name = "Authorization") String authorization) {
-
+        // Authenticate user and return appropriate response
         return authorizationService.authenticateUser(userName, authorization) ?
                 ResponseEntity.ok("Login successful") :
                 ResponseEntity.status(HttpStatus.FORBIDDEN).body("Login failed");

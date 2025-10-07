@@ -15,27 +15,32 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "cashflow")
-public class Cashflow {
+public class Cashflow {// Entity to represent a Cashflow
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Changed from 'id' to match DTO
 
+    // Changed field names to match DTO expectations
     private BigDecimal paymentValue;
     private LocalDate valueDate;
     private Double rate;
 
+    // Changed relationships to match DTO expectations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leg_id", referencedColumnName = "legId")
     private TradeLeg tradeLeg; // Changed from 'leg' to match service expectations
 
+    // Changed relationships to match DTO expectations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pay_rec_id", referencedColumnName = "id")
     private PayRec payRec;
 
+    // Changed relationships to match DTO expectations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_type_id", referencedColumnName = "id")
     private LegType paymentType;
 
+    // Changed relationships to match DTO expectations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_business_day_convention_id", referencedColumnName = "id")
     private BusinessDayConvention paymentBusinessDayConvention;

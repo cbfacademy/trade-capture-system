@@ -20,15 +20,16 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/costCenters")
 @Validated
-public class CostCenterController {
+public class CostCenterController {// Purpose of this controller - to manage cost centers, including creating, retrieving, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(CostCenterController.class);
 
-    @Autowired
+    @Autowired// Injecting CostCenterService to handle business logic
     private CostCenterService costCenterService;
-    @Autowired
+
+    @Autowired // Injecting CostCenterMapper to convert between entity and DTO
     private CostCenterMapper costCenterMapper;
 
-    @GetMapping
+    @GetMapping // Endpoint to retrieve all cost centers
     public List<CostCenterDTO> getAllCostCenters() {
         logger.info("Fetching all cost centers");
         return costCenterService.getAllCostCenters().stream()
@@ -36,7 +37,7 @@ public class CostCenterController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint to retrieve a cost center by its ID
     public ResponseEntity<CostCenterDTO> getCostCenterById(@PathVariable Long id) {
         logger.debug("Fetching cost center by id: {}", id);
         return costCenterService.getCostCenterById(id)
@@ -45,7 +46,7 @@ public class CostCenterController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping // Endpoint to create a new cost center
     public ResponseEntity<?> createCostCenter(@Valid @RequestBody CostCenterDTO costCenterDTO) {
         logger.info("Creating new cost center: {}", costCenterDTO);
         if (costCenterDTO.getCostCenterName() == null || costCenterDTO.getCostCenterName().isBlank()) {
@@ -59,14 +60,14 @@ public class CostCenterController {
         return ResponseEntity.ok(costCenterMapper.toDto(saved));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Endpoint to delete a cost center by its ID
     public ResponseEntity<Void> deleteCostCenter(@PathVariable Long id) {
         logger.warn("Deleting cost center with id: {}", id);
         costCenterService.deleteCostCenter(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/values")
+    @GetMapping("/values") // Endpoint to retrieve all cost center names
     public List<String> getAllCostCenterNames() {
         return costCenterService.getAllCostCenters().stream()
                 .map(CostCenter::getCostCenterName)

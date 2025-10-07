@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Setter
 @Entity
 @Table(name = "user_profile")
-public class UserProfile {
+public class UserProfile {// Entity to represent a User Profile
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

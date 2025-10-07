@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TradeLegService {
+public class TradeLegService {// Service class for managing TradeLeg entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(TradeLegService.class);
 
+    // Injected repositories
     @Autowired
     private TradeLegRepository tradeLegRepository;
     @Autowired
@@ -40,6 +43,7 @@ public class TradeLegService {
     @Autowired
     private PayRecRepository payRecRepository;
 
+    // CRUD operations
     public List<TradeLeg> getAllTradeLegs() {
         logger.info("Retrieving all trade legs");
         return tradeLegRepository.findAll();

@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ScheduleService {
+public class ScheduleService {// Service class for managing Schedule entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(ScheduleService.class);
 
+    // Injected repository
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    // CRUD operations
     public List<Schedule> findAll() {
         logger.info("Retrieving all schedules");
         return scheduleRepository.findAll();

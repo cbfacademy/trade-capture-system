@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "counterparty")
-public class Counterparty {
+public class Counterparty {// Entity to represent a Counterparty
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

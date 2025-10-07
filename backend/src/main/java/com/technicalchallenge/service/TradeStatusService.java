@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TradeStatusService {
+public class TradeStatusService {// Service class for managing TradeStatus entities
+
+    // Logger for logging information and errors
     private static final Logger logger = LoggerFactory.getLogger(TradeStatusService.class);
 
+    // Injected repository
     @Autowired
     private TradeStatusRepository tradeStatusRepository;
 
+    // CRUD operations
     public List<TradeStatus> findAll() {
         logger.info("Retrieving all trade statuses");
         return tradeStatusRepository.findAll();

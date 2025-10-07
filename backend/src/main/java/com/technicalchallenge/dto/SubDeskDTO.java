@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Data
-public class SubDeskDTO {
+public class SubDeskDTO {//DTO for transferring sub-desk data
     private Long id;
     private String subdeskName;
     private String deskName;

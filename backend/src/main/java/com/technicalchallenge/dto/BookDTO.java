@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookDTO {
+public class BookDTO {//DTO for transferring book data
     private Long id;
     private String bookName;
     private boolean active;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+// Repository interface for managing HolidayCalendar entities in the database
 public interface HolidayCalendarRepository extends JpaRepository<HolidayCalendar, Long> {
     Optional<HolidayCalendar> findByHolidayCalendar(String holidayCalendar);
 }

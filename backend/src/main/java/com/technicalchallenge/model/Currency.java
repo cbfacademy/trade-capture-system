@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "currency")
-public class Currency {
+public class Currency {// Entity to represent a Currency
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

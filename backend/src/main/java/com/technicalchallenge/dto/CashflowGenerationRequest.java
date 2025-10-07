@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class CashflowGenerationRequest {
+public class CashflowGenerationRequest {//DTO for requesting cashflow generation
     private List<TradeLegDTO> legs;
     private LocalDate tradeStartDate;
     private LocalDate tradeMaturityDate;

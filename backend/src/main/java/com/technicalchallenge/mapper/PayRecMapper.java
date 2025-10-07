@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayRecMapper {
+public class PayRecMapper {// Mapper for PayRec and PayRecDTO
+
+    // Inject ModelMapper
     @Autowired
     private ModelMapper modelMapper;
 
+    // Convert PayRec entity to PayRecDTO
     public PayRecDTO toDto(PayRec entity) {
         return modelMapper.map(entity, PayRecDTO.class);
     }
 
+    // Convert PayRecDTO to PayRec entity
     public PayRec toEntity(PayRecDTO dto) {
         return modelMapper.map(dto, PayRec.class);
     }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Data
-public class CostCenterDTO {
+public class CostCenterDTO {//DTO for transferring cost center data
     private Long id;
     private String costCenterName;
     private String subDeskName;

@@ -26,13 +26,13 @@ import java.util.Optional;
 @RequestMapping("/api/counterparties")
 @Validated
 @Tag(name = "Counterparties", description = "Counterparty management for trade settlement and risk management")
-public class CounterpartyController {
+public class CounterpartyController { // Purpose of this controller - to manage counterparties, including creating, retrieving, and deleting them.
     @Autowired
     private CounterpartyService counterpartyService;
     @Autowired
     private CounterpartyMapper counterpartyMapper;
 
-    @GetMapping
+    @GetMapping // Endpoint to retrieve all counterparties
     @Operation(summary = "Get all counterparties",
                description = "Retrieves a list of all counterparties available for trading")
     @ApiResponses(value = {
@@ -47,7 +47,7 @@ public class CounterpartyController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint to retrieve a counterparty by its ID
     @Operation(summary = "Get counterparty by ID",
                description = "Retrieves detailed information about a specific counterparty")
     @ApiResponses(value = {
@@ -64,7 +64,7 @@ public class CounterpartyController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping // Endpoint to create a new counterparty
     @Operation(summary = "Create a new counterparty",
                description = "Adds a new counterparty to the system")
     @ApiResponses(value = {
@@ -83,7 +83,7 @@ public class CounterpartyController {
         return ResponseEntity.ok(counterpartyMapper.toDto(saved));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Endpoint to delete a counterparty by its ID
     @Operation(summary = "Delete a counterparty",
                description = "Removes a counterparty from the system")
     @ApiResponses(value = {
@@ -96,7 +96,7 @@ public class CounterpartyController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/values")
+    @GetMapping("/values") // Endpoint to retrieve all counterparty names
     @Operation(summary = "Get all counterparty names",
                description = "Retrieves a list of all counterparty names")
     @ApiResponses(value = {

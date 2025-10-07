@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "leg_type")
-public class LegType {
+public class LegType {// Entity to represent a Leg Type
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

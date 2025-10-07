@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "business_day_convention")
-public class BusinessDayConvention {
+public class BusinessDayConvention {// Entity to represent Business Day Convention
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

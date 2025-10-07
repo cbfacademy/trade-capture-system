@@ -19,15 +19,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/userPrivileges")
-public class UserPrivilegeController {
+public class UserPrivilegeController {// Purpose of this controller - to manage user privileges, including creating, retrieving, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(UserPrivilegeController.class);
 
+    // Injecting UserPrivilegeService to handle business logic
     @Autowired
     private UserPrivilegeService userPrivilegeService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private UserPrivilegeMapper userPrivilegeMapper;
 
+    // Endpoint to retrieve all user privileges
     @GetMapping
     public List<UserPrivilegeDTO> getAllUserPrivileges() {
         logger.info("Fetching all user privileges");
@@ -36,6 +39,7 @@ public class UserPrivilegeController {
                 .toList();
     }
 
+    // Endpoint to retrieve a user privilege by its ID
     @GetMapping("/{id}")
     public ResponseEntity<UserPrivilegeDTO> getUserPrivilegeById(@PathVariable Long id) {
         logger.debug("Fetching user privilege by id: {}", id);
@@ -45,6 +49,7 @@ public class UserPrivilegeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new user privilege
     @PostMapping
     public ResponseEntity<UserPrivilegeDTO> createUserPrivilege(@Valid @RequestBody UserPrivilegeDTO userPrivilegeDTO) {
         logger.info("Creating new user privilege: {}", userPrivilegeDTO);
@@ -53,6 +58,7 @@ public class UserPrivilegeController {
                 .body(userPrivilegeMapper.toDto(createdUserPrivilege));
     }
 
+    // Endpoint to delete a user privilege by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserPrivilege(@PathVariable Long id) {
         logger.warn("Deleting user privilege with id: {}", id);

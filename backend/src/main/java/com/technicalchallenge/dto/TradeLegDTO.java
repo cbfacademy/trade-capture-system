@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeLegDTO {
+public class TradeLegDTO {//DTO for transferring trade leg data
     private Long legId;
 
     @NotNull(message = "Notional is required")

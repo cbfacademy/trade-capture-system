@@ -29,15 +29,18 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Users", description = "User management and authentication operations")
-public class UserController {
+public class UserController {// Purpose of this controller - to manage users, including creating, retrieving, updating, and deleting them.
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    // Injecting ApplicationUserService to handle business logic
     @Autowired
     private ApplicationUserService applicationUserService;
 
+    // Mapper to convert between entity and DTO
     @Autowired
     private ApplicationUserMapper applicationUserMapper;
 
+    // Endpoint to retrieve all users
     @GetMapping
     @Operation(summary = "Get all users",
                description = "Retrieves a list of all users in the system with their profile information and privileges")
@@ -54,6 +57,7 @@ public class UserController {
                 .toList();
     }
 
+    // Endpoint to retrieve a user by their login ID
     @GetMapping("/loginId/{loginId}")
     @Operation(summary = "Get user by login ID",
                description = "Retrieves a specific user by their unique login identifier")
@@ -77,6 +81,7 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Endpoint to retrieve a user by their ID
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID",
                description = "Retrieves a specific user by their unique identifier")
@@ -95,6 +100,7 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Endpoint to create a new user
     @PostMapping
     @Operation(summary = "Create new user",
                description = "Registers a new user in the system with the provided profile information")
@@ -113,6 +119,7 @@ public class UserController {
         return ResponseEntity.created(URI.create("/api/users/" + savedUserDto.getId())).body(savedUserDto);
     }
 
+    // Endpoint to update an existing user
     @PutMapping("/{id}")
     @Operation(summary = "Update user",
                description = "Updates the profile information of an existing user")
@@ -131,6 +138,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUserDto);
     }
 
+    // Endpoint to delete a user by their ID
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user",
                description = "Removes a user from the system")
@@ -145,6 +153,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // Endpoint to retrieve all trade type values
     @GetMapping("/values")
     @Operation(summary = "Get all trade type values",
                description = "Retrieves a list of all trade type values associated with users")

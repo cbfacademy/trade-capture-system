@@ -11,19 +11,23 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class BookMapper {
+public class BookMapper {// Mapper for Book and BookDTO
+
+    // Inject ModelMapper and CostCenterRepository
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private CostCenterRepository costCenterRepository;
 
+    // Convert Book entity to BookDTO
     public BookDTO toDto(Book entity) {
         BookDTO dto = modelMapper.map(entity, BookDTO.class);
         dto.setCostCenterName(entity.getCostCenter() != null ? entity.getCostCenter().getCostCenterName() : null);
         return dto;
     }
 
+    // Convert BookDTO to Book entity
     public Book toEntity(BookDTO dto) {
         Book entity = modelMapper.map(dto, Book.class);
         if (dto.getCostCenterName() != null) {
