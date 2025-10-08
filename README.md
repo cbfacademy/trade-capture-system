@@ -47,7 +47,7 @@ Set up the trading application in your local environment and ensure both backend
 
 ### Key Resources
 - **Detailed Setup Guide**: See `PROJECT-SETUP-GUIDE.md`
-- **Database Console**: JDBC URL: `jdbc:h2:file:./data/tradingdb`, User: `sa`, Password: (empty)
+- **Database Console**: JDBC URL: `jdbc:h2:file:./data/tradingdb`, User: `sa`, Password: password
 
 ---
 
@@ -81,7 +81,6 @@ For each test fix, document:
 - ✅ Proper Git commit messages following required format
 
 ### Templates
-- **Documentation**: `test-fixes-template.md`
 - **Git Standards**: `git-commit-standards.md`
 - **Self-Assessment**: `test-fix-checklist.md`
 
