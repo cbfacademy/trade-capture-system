@@ -1,7 +1,6 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.dto.BookDTO;
-import com.technicalchallenge.model.Book;
+
 import com.technicalchallenge.model.Counterparty;
 import com.technicalchallenge.repository.CounterpartyRepository;
 import org.junit.jupiter.api.Test;
@@ -44,22 +43,25 @@ public class CounterpartyServiceTest {
         verify(counterpartyRepository, times(1)).save(counterparty);
     }
 
-    @Test
-    void testUpdateCounterparty() {
-        Counterparty existing = new Counterparty();
-        existing.setId(3L);
-        existing.setName("Old Name");
+        @Test
+        void testUpdateCounterparty() {
+            Counterparty existing = new Counterparty();
+            existing.setId(3L);
+            existing.setName("Old Name");
 
-        Counterparty updateData = new Counterparty();
-        updateData.setName("New Name");
+            Counterparty updateData = new Counterparty();
+            updateData.setName("New Name");
 
-        when(counterpartyRepository.findById(3L)).thenReturn(Optional.of(existing));
-        when(counterpartyRepository.save(existing)).thenAnswer(invocation -> invocation.getArgument(0));
+            when(counterpartyRepository.findById(3L)).thenReturn(Optional.of(existing));
+            when(counterpartyRepository.save(existing)).thenReturn(existing);
 
-        Counterparty result = counterpartyService.updateCounterparty(3L, updateData);
+            Counterparty result = counterpartyService.updateCounterparty(3L, updateData);
 
-        assertEquals("New Name", result.getName());
-    }
+            assertEquals("New Name", result.getName());
+            verify(counterpartyRepository, times(1)).findById(3L);
+            verify(counterpartyRepository, times(1)).save(existing);
+        }
+
 
 
     @Test
