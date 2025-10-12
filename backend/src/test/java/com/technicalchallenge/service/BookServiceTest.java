@@ -1,6 +1,7 @@
 package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.BookDTO;
+import com.technicalchallenge.mapper.BookMapper;
 import com.technicalchallenge.model.Book;
 import com.technicalchallenge.repository.BookRepository;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,12 +22,20 @@ public class BookServiceTest {
     private BookRepository bookRepository;
     @InjectMocks
     private BookService bookService;
+    @Mock
+    private BookMapper bookMapper;
+
+
+
 
     @Test
     void testFindBookById() {
         Book book = new Book();
         book.setId(1L);
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(1L);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(bookMapper.toDto(book)).thenReturn(bookDTO);
         Optional<BookDTO> found = bookService.getBookById(1L);
         assertTrue(found.isPresent());
         assertEquals(1L, found.get().getId());
@@ -37,8 +47,9 @@ public class BookServiceTest {
         book.setId(2L);
         BookDTO bookDTO = new BookDTO();
         bookDTO.setId(2L);
+        when(bookMapper.toEntity(bookDTO)).thenReturn(book);
         when(bookRepository.save(any(Book.class))).thenReturn(book);
-
+        when(bookMapper.toDto(book)).thenReturn(bookDTO);
         BookDTO saved = bookService.saveBook(bookDTO);
         assertNotNull(saved);
         assertEquals(2L, saved.getId());
