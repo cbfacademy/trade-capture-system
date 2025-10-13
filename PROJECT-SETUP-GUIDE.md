@@ -356,13 +356,13 @@ set PORT=5174 && npm run dev  # Windows
 
 **Issue**: CORS errors in browser console
 **Solutions**:
-2. **Custom Port Usage**: If using a different port, update CORS configuration in `backend/src/main/java/com/technicalchallenge/config/WebConfig.java`
 1. **Default Configuration**: Backend is pre-configured for standard Vite port
    - Supports `http://localhost:5173`
+2. **Custom Port Usage**: If using a different port or URL (e.g. from GitHub CodeSpaces), create an override file at `backend/src/main/resources/local.properties` and add your frontend URL
 3. **Configuration Location**: 
-   ```java
-   // In WebConfig.java
-   .allowedOrigins("http://localhost:3000", "http://localhost:5173")
+   ```properties
+   # In local.properties
+   management.endpoints.web.cors.allowed-origins=https://my-codespace-id-5173.app.github.dev
    ```
 
 ## Testing the Setup
