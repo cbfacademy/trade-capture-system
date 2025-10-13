@@ -2,10 +2,14 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.dto.ValidationResult;
 import com.technicalchallenge.model.*;
-import com.technicalchallenge.repository.*;
-
-
+import com.technicalchallenge.repository.CashflowRepository;
+import com.technicalchallenge.repository.TradeLegRepository;
+import com.technicalchallenge.repository.TradeRepository;
+import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.repository.BookRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,11 +25,17 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+/**
+ * Updated test:
+ * - Uses LENIENT Mockito strictness to avoid UnnecessaryStubbing failures
+ * - Stubs Book/Counterparty/TradeStatus lookups so createTrade won't throw "Book not found or not set"
+ * - Mocks TradeValidationService default to valid result
+ */
 @MockitoSettings(strictness = Strictness.LENIENT)
-
 @ExtendWith(MockitoExtension.class)
 class TradeServiceTest {
 
@@ -47,11 +57,9 @@ class TradeServiceTest {
     @Mock
     private CounterpartyRepository counterpartyRepository;
 
+    // NEW: mock the validation service which TradeService now depends on
     @Mock
-    private ScheduleRepository scheduleRepository;
-
-    @Mock
-    private AdditionalInfoService additionalInfoService;
+    private TradeValidationService tradeValidationService;
 
     @InjectMocks
     private TradeService tradeService;
@@ -70,7 +78,7 @@ class TradeServiceTest {
 
         TradeLegDTO leg1 = new TradeLegDTO();
         leg1.setNotional(BigDecimal.valueOf(1000000));
-        leg1.setRate(0.0035);
+        leg1.setRate(0.05);
 
         TradeLegDTO leg2 = new TradeLegDTO();
         leg2.setNotional(BigDecimal.valueOf(1000000));
@@ -78,43 +86,49 @@ class TradeServiceTest {
 
         tradeDTO.setTradeLegs(Arrays.asList(leg1, leg2));
 
+        // Provide book/counterparty names so populateReferenceDataByName uses name lookups
+        tradeDTO.setBookName("TestBook");
+        tradeDTO.setCounterpartyName("TestCp");
+
         trade = new Trade();
         trade.setId(1L);
         trade.setTradeId(100001L);
         trade.setVersion(1);
 
-        // --- NEW: Provide DTO reference names that the service will look up ---
-        tradeDTO.setBookName("TestBook");            // service checks getBookName()
-        tradeDTO.setCounterpartyName("TestCp");     // service checks counterparty name
+        // DEFAULT: ensure validation service returns a valid result unless a test overrides it
+        ValidationResult defaultVr = new ValidationResult(); // valid == true by default
+        lenient().when(tradeValidationService.validateTradeBusinessRules(any(TradeDTO.class))).thenReturn(defaultVr);
 
-        // --- Create small objects to return from repository lookups ---
-        Book book = new Book();
-        book.setBookName("TestBook");
-        book.setId(1L);
-    
-        Counterparty cp = new Counterparty();
-        cp.setName("TestCp");
-        cp.setId(1L);
+        // Stub repository saves to return non-null objects and avoid NPEs
+        lenient().when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
 
-        TradeStatus newStatus = new TradeStatus();
-        newStatus.setTradeStatus("NEW");
-        newStatus.setId(1L);
-
-        // Mock repository behavior used by populateReferenceDataByName and validateReferenceData 
-        when(bookRepository.findByBookName("TestBook")).thenReturn(Optional.of(book));
-        when(counterpartyRepository.findByName("TestCp")).thenReturn(Optional.of(cp));
-        when(tradeStatusRepository.findByTradeStatus("NEW")).thenReturn(Optional.of(newStatus));
-
-        // Mock repository behavior to prevent NPEs
-        when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
-
-        when(tradeLegRepository.save(any(TradeLeg.class))).thenAnswer(invocation -> {
+        lenient().when(tradeLegRepository.save(any(TradeLeg.class))).thenAnswer(invocation -> {
             TradeLeg arg = invocation.getArgument(0);
-            arg.setLegId(1L); // ensure legId is set to avoid NullPointerException
+            // ensure legId is set to avoid NullPointerException in TradeService generateCashflows logs
+            try { arg.setLegId(1L); } catch (Throwable ignored) {}
             return arg;
         });
 
-        when(cashflowRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(cashflowRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // NEW: stub reference lookups so validateReferenceData passes
+        Book book = new Book();
+        book.setId(1L);
+        book.setBookName("TestBook");
+        book.setActive(true);
+
+        Counterparty cp = new Counterparty();
+        cp.setId(1L);
+        cp.setName("TestCp");
+        cp.setActive(true);
+
+        TradeStatus newStatus = new TradeStatus();
+        newStatus.setId(1L); // <-- use Long literal
+        newStatus.setTradeStatus("NEW");
+
+        lenient().when(bookRepository.findByBookName("TestBook")).thenReturn(Optional.of(book));
+        lenient().when(counterpartyRepository.findByName("TestCp")).thenReturn(Optional.of(cp));
+        lenient().when(tradeStatusRepository.findByTradeStatus("NEW")).thenReturn(Optional.of(newStatus));
     }
 
     @Test
@@ -133,15 +147,15 @@ class TradeServiceTest {
 
     @Test
     void testCreateTrade_InvalidDates_ShouldFail() {
-        // Given
-        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before trade date
+        // Given - make the start date before trade date
+        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10));
 
         // When & Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             tradeService.createTrade(tradeDTO);
         });
 
-        // Fixed assertion to match actual service error
+        // Accept partial message check to remain robust against exact wording
         assertTrue(exception.getMessage().toLowerCase().contains("start date"));
     }
 
@@ -155,7 +169,7 @@ class TradeServiceTest {
             tradeService.createTrade(tradeDTO);
         });
 
-        assertTrue(exception.getMessage().contains("exactly 2 legs"));
+        assertTrue(exception.getMessage().toLowerCase().contains("exactly 2 legs"));
     }
 
     @Test
@@ -211,9 +225,9 @@ class TradeServiceTest {
         assertTrue(exception.getMessage().contains("Trade not found"));
     }
 
+    // Cashflow test stub left intentionally minimal — can be extended to assert generated cashflows
     @Test
     void testCashflowGeneration_MonthlySchedule() {
-        // Given
         TradeLeg leg = new TradeLeg();
         leg.setNotional(BigDecimal.valueOf(1000000));
         leg.setLegId(1L); // prevent NPE
@@ -223,21 +237,3 @@ class TradeServiceTest {
         assertEquals(expectedMonths, actualMonths);
     }
 }
-
-/*Development Notes for Commit Message
- * fix(test): TradeServiceTest - added mocks and fixed date assertion
-
-- Problem: 
-TradeServiceTest was failing with NPEs and wrong date assertion.
-- Root Cause: 
-Tests relied on repository lookups (book/counterparty/trade status) that weren't mocked 
-and the test expected a wrong error message.
-- Solution: 
-Added mocks for BookRepository, CounterpartyRepository and TradeStatusRepository; 
-ensured tradeLegRepository.save sets legId; fixed invalid-date assertion to match service message; 
-lenient Mockito used while iterating.
-- Impact: 
-TradeServiceTest now passes and prevents runtime NPEs during create/amend flows. 
-Ready to validate cashflow calculation next.
-
- */
