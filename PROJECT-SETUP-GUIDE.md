@@ -178,21 +178,20 @@ npm run preview  # Preview production build
 
 #### Verify Frontend is Running
 - **Application URL**: Check terminal for actual port assignment
-  - **npm (Vite)**: Typically http://localhost:5173 
-  - **pnpm (Vite)**: Typically http://localhost:3000
+  - Defaults to http://localhost:5173 
 - **Should automatically open in browser**
-- **Note**: The frontend uses Vite, which will automatically assign an available port if the default is busy
-- **CORS Configuration**: Backend is pre-configured to accept requests from both ports (3000 and 5173)
+- **Note**: The frontend uses Vite, which will automatically assign the next available port if the default is busy
+- **CORS Configuration**: Backend is pre-configured to accept requests from port `5173`
 
 ### Step 4: Verify Full Application
 
 #### Check Both Services are Running
-- **Frontend**: http://localhost:3000
+- **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8080
 - **Database Console**: http://localhost:8080/h2-console
 
 #### Test Basic Functionality
-1. **Access the Application**: Navigate to http://localhost:3000
+1. **Access the Application**: Navigate to http://localhost:5173
 2. **Login/Register**: Create a user account or use existing credentials
 3. **Explore Features**: Navigate through available trading functionalities
 4. **API Testing**: Use browser developer tools to verify API calls
@@ -314,16 +313,16 @@ rm -rf node_modules pnpm-lock.yaml
 npm install
 ```
 
-**Issue**: `Port 3000 already in use`
-**Solution**: Kill the process using port 3000 or Vite will automatically use the next available port:
+**Issue**: `Port 5173 already in use`
+**Solution**: Kill the process using port 5173 or Vite will automatically use the next available port, requiring you to re-configure CORS in the backend:
 ```bash
-# For npm
-PORT=3001 npm run dev  # Linux/macOS
-set PORT=3001 && npm run dev  # Windows
-
 # For pnpm  
-PORT=3001 pnpm dev  # Linux/macOS
-set PORT=3001 && pnpm dev  # Windows
+PORT=5174 pnpm dev  # Linux/macOS
+set PORT=5174 && pnpm dev  # Windows
+
+# For npm
+PORT=5174 npm run dev  # Linux/macOS
+set PORT=5174 && npm run dev  # Windows
 ```
 
 #### Database Issues
@@ -357,10 +356,9 @@ set PORT=3001 && pnpm dev  # Windows
 
 **Issue**: CORS errors in browser console
 **Solutions**:
-1. **Default Configuration**: Backend is pre-configured for both common Vite ports
-   - Supports `http://localhost:3000` (typical pnpm default)
-   - Supports `http://localhost:5173` (typical npm default)
 2. **Custom Port Usage**: If using a different port, update CORS configuration in `backend/src/main/java/com/technicalchallenge/config/WebConfig.java`
+1. **Default Configuration**: Backend is pre-configured for standard Vite port
+   - Supports `http://localhost:5173`
 3. **Configuration Location**: 
    ```java
    // In WebConfig.java
