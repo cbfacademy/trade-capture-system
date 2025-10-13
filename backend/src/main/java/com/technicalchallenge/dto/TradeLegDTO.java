@@ -10,12 +10,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
+import java.time.LocalDate;
 
+/**
+ * DTO for transferring trade leg data
+ * CHANGE: Added maturityDate field (used by validation/tests)
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TradeLegDTO {//DTO for transferring trade leg data
+public class TradeLegDTO {
     private Long legId;
 
     @NotNull(message = "Notional is required")
@@ -36,6 +41,9 @@ public class TradeLegDTO {//DTO for transferring trade leg data
     private Long indexId;
     @JsonProperty("index")
     private String indexName;
+
+    // NEW: maturity date used by validation & cashflow generation
+    private LocalDate maturityDate;
 
     // Holiday calendar reference
     private Long holidayCalendarId;
