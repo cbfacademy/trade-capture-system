@@ -1,8 +1,6 @@
 {
   "name": "Technical Challenge Dev Container",
   "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
-  "description": "Development container for the Technical Challenge project, providing Java 21 with Maven and Node.js 18",
-
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "21",
@@ -13,7 +11,6 @@
       "version": "18"
     }
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,6 +21,5 @@
       ]
     }
   },
-
   "postCreateCommand": "pnpm install && java -version && mvn -v && node -v && npm -v"
 }
