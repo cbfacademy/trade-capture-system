@@ -18,6 +18,7 @@ import java.util.List;
 public class TradeDTO {
     private Long id;
 
+    @JsonProperty("tradeId")
     private Long tradeId;
 
     private Integer version;
