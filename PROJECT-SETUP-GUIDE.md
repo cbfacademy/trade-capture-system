@@ -358,12 +358,20 @@ set PORT=5174 && npm run dev  # Windows
 **Solutions**:
 1. **Default Configuration**: Backend is pre-configured for standard Vite port
    - Supports `http://localhost:5173`
-2. **Custom Port Usage**: If using a different port or URL (e.g. from GitHub CodeSpaces), create an override file at `backend/src/main/resources/local.properties` and add your frontend URL
-3. **Configuration Location**: 
-   ```properties
-   # In local.properties
-   management.endpoints.web.cors.allowed-origins=https://my-codespace-id-5173.app.github.dev
-   ```
+2. **Custom Port Usage**: If using a different port or URL (e.g. from GitHub CodeSpaces), create an override file at `backend/src/main/resources/local.properties` and add your frontend URL, along with the backend URL for the Swagger UI:
+```properties
+# In local.properties
+# Frontend URL, using port 5173
+management.endpoints.web.cors.allowed-origins=https://my-codespace-id-5173.app.github.dev
+# Backend URL, using port 8080
+springdoc.swagger-ui.server-url=https://my-codespace-id-8080.app.github.dev
+```
+3. **Configuration Location**: Create a .env file at `frontend/.env` and add your frontend URL:
+```properties
+# In .env
+# Backend URL, using port 8080
+VITE_API_BASE_URL=https://my-codespace-id-8080.app.github.dev
+```
 
 ## Testing the Setup
 
