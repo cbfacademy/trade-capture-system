@@ -30,7 +30,7 @@ public class CounterpartyServiceTest {
         assertTrue(found.isPresent());
         assertEquals(1L, found.get().getId());
     }
-
+ // Added tests for save, update, delete
     @Test
     void testSaveCounterparty() {
         Counterparty counterparty = new Counterparty();
@@ -72,5 +72,5 @@ public class CounterpartyServiceTest {
         verify(counterpartyRepository, times(1)).deleteById(counterpartyId);
     }
 
-    // Add more tests for save, update, delete
+   
 }
