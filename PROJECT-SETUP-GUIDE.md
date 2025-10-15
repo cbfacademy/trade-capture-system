@@ -85,6 +85,73 @@ git clone https://github.com/YOUR_USERNAME/trade-capture-system.git
 cd trade-capture-system
 ```
 
+#### GitHub Codespaces Setup (Alternative)
+
+If you're using GitHub Codespaces instead of a local development environment, follow these additional steps:
+
+##### 1. Port Forwarding Configuration
+1. **Forward Required Ports**: In your Codespace, forward both ports 5173 and 8080
+2. **Make Ports Public**: Ensure both ports are set to "Public" visibility
+   - Port 5173: Frontend application
+   - Port 8080: Backend API and Swagger UI
+
+##### 2. Frontend Configuration
+Create a `.env` file in the `frontend` directory:
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Create .env file
+touch .env
+```
+
+Add the following content to `frontend/.env`:
+```properties
+# Replace YOUR_CODESPACE_ID with your actual Codespace ID
+# The URL format is: https://YOUR_CODESPACE_ID-8080.app.github.dev
+VITE_API_BASE_URL=https://YOUR_CODESPACE_ID-8080.app.github.dev
+```
+
+##### 3. Backend Configuration
+Create a `local.properties` file in the `backend` directory:
+```bash
+# Navigate to backend directory
+cd backend
+
+# Create local.properties file
+touch local.properties
+```
+
+Add the following content to `backend/local.properties`:
+```properties
+# Replace YOUR_CODESPACE_ID with your actual Codespace ID
+# Frontend URL (port 5173)
+management.endpoints.web.cors.allowed-origins=https://YOUR_CODESPACE_ID-5173.app.github.dev
+# Backend URL (port 8080) for Swagger UI
+springdoc.swagger-ui.server-url=https://YOUR_CODESPACE_ID-8080.app.github.dev
+```
+
+##### 4. Finding Your Codespace ID
+Your Codespace ID can be found in the URL when you access your Codespace. The format is:
+- **Codespace URL**: `https://YOUR_CODESPACE_ID-8080.app.github.dev`
+- **Your ID**: The part before `-8080.app.github.dev`
+
+##### 5. Codespaces URL Changes
+When using GitHub Codespaces, the following URLs in this documentation will change:
+
+**Standard Local URLs** → **Codespaces URLs**:
+- `http://localhost:8080` → `https://YOUR_CODESPACE_ID-8080.app.github.dev`
+- `http://localhost:5173` → `https://YOUR_CODESPACE_ID-5173.app.github.dev`
+- `http://localhost:8080/swagger-ui/index.html` → `https://YOUR_CODESPACE_ID-8080.app.github.dev/swagger-ui/index.html`
+- `http://localhost:8080/h2-console` → `https://YOUR_CODESPACE_ID-8080.app.github.dev/h2-console`
+- `http://localhost:8080/actuator/health` → `https://YOUR_CODESPACE_ID-8080.app.github.dev/actuator/health`
+
+**Important Notes for Codespaces Users**:
+- Replace `YOUR_CODESPACE_ID` with your actual Codespace identifier in all configuration files
+- Both ports must be set to "Public" for external access
+- The Codespace URLs are automatically generated and will be different for each user
+- You can find your Codespace URLs in the "Ports" tab of your Codespace interface
+
 ### Step 2: Backend Setup
 
 #### Navigate to Backend Directory
