@@ -2,7 +2,6 @@ package com.technicalchallenge.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.technicalchallenge.dto.UserPrivilegeDTO;
 import com.technicalchallenge.mapper.UserPrivilegeMapper;
 import com.technicalchallenge.model.UserPrivilege;
+import com.technicalchallenge.model.UserPrivilegeId;
 import com.technicalchallenge.service.UserPrivilegeService;
 
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class UserPrivilegeController {
     @Autowired
     private UserPrivilegeMapper userPrivilegeMapper;
 
-    @GetMapping
+    @GetMapping()
     public List<UserPrivilegeDTO> getAllUserPrivileges() {
         logger.info("Fetching all user privileges");
         return userPrivilegeService.getAllUserPrivileges().stream()
@@ -42,26 +42,28 @@ public class UserPrivilegeController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserPrivilegeDTO> getUserPrivilegeById(@PathVariable Long id) {
-        logger.debug("Fetching user privilege by id: {}", id);
-        Optional<UserPrivilege> userPrivilege = userPrivilegeService.getUserPrivilegeById(id);
-        return userPrivilege.map(userPrivilegeMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{userId}")
+    public List<UserPrivilegeDTO> getUserPrivileges(@PathVariable Long userId) {
+        logger.debug("Fetching privileges for user: {}", userId);
+        return userPrivilegeService.getUserPrivileges(userId).stream()
+                .map(userPrivilegeMapper::toDto)
+                .toList();
     }
 
     @PostMapping
     public ResponseEntity<UserPrivilegeDTO> createUserPrivilege(@Valid @RequestBody UserPrivilegeDTO userPrivilegeDTO) {
         logger.info("Creating new user privilege: {}", userPrivilegeDTO);
         UserPrivilege createdUserPrivilege = userPrivilegeService.saveUserPrivilege(userPrivilegeMapper.toEntity(userPrivilegeDTO));
-        return ResponseEntity.created(URI.create("/api/userPrivileges/" + createdUserPrivilege.getUserId()))
+        URI location = URI.create(String.format("/api/users/%d/%d",
+                createdUserPrivilege.getUserId(), createdUserPrivilege.getPrivilegeId()));
+        return ResponseEntity.created(location)
                 .body(userPrivilegeMapper.toDto(createdUserPrivilege));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserPrivilege(@PathVariable Long id) {
-        logger.warn("Deleting user privilege with id: {}", id);
+    @DeleteMapping("/{userId}/{privilegeId}")
+    public ResponseEntity<Void> deleteUserPrivilege(@PathVariable Long userId, @PathVariable Long privilegeId) {
+        UserPrivilegeId id = new UserPrivilegeId(userId, privilegeId);
+        logger.warn("Deleting user privilege with id: {userId={}, privilegeId={}}", userId, privilegeId);
         userPrivilegeService.deleteUserPrivilege(id);
         return ResponseEntity.noContent().build();
     }
