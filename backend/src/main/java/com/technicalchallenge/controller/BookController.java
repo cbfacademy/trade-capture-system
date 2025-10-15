@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.technicalchallenge.dto.BookDTO;
 import com.technicalchallenge.service.BookService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/books")
 @Validated
+@Tag(name = "Books", description = "Trading book management for organizing trades by desk/strategy")
 public class BookController {
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 

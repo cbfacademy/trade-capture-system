@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.PayRecMapper;
 import com.technicalchallenge.model.PayRec;
 import com.technicalchallenge.service.PayRecService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/payRecs")
+@Tag(name = "Pay/Receive Flags", description = "Payment direction reference data for trade legs")
 public class PayRecController {
     private static final Logger logger = LoggerFactory.getLogger(PayRecController.class);
 

@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.IndexMapper;
 import com.technicalchallenge.model.Index;
 import com.technicalchallenge.service.IndexService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/indices")
+@Tag(name = "Indices", description = "Financial index management and rate reference data")
 public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 

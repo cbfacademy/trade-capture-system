@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.technicalchallenge.model.BusinessDayConvention;
 import com.technicalchallenge.service.BusinessDayConventionService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/businessDayConventions")
+@Tag(name = "Business Day Conventions", description = "Business day convention reference data for date calculations")
 public class BusinessDayConventionController {
     private static final Logger logger = LoggerFactory.getLogger(BusinessDayConventionController.class);
 

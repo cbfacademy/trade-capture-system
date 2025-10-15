@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.CurrencyMapper;
 import com.technicalchallenge.model.Currency;
 import com.technicalchallenge.service.CurrencyService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/currencies")
+@Tag(name = "Currencies", description = "Currency reference data and exchange rate operations")
 public class CurrencyController {
     private static final Logger logger = LoggerFactory.getLogger(CurrencyController.class);
 

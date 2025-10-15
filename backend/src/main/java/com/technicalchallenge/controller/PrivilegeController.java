@@ -21,10 +21,12 @@ import com.technicalchallenge.mapper.PrivilegeMapper;
 import com.technicalchallenge.model.Privilege;
 import com.technicalchallenge.service.PrivilegeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/privileges")
+@Tag(name = "Privileges", description = "Privilege management and role-based access control")
 public class PrivilegeController {
     private static final Logger logger = LoggerFactory.getLogger(PrivilegeController.class);
 

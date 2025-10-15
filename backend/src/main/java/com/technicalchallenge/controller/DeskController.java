@@ -20,11 +20,13 @@ import com.technicalchallenge.mapper.DeskMapper;
 import com.technicalchallenge.model.Desk;
 import com.technicalchallenge.service.DeskService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/desks")
 @Validated
+@Tag(name = "Desks", description = "Trading desk management and organizational structure")
 public class DeskController {
     private static final Logger logger = LoggerFactory.getLogger(DeskController.class);
 

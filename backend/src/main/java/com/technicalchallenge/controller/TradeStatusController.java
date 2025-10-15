@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.TradeStatusMapper;
 import com.technicalchallenge.model.TradeStatus;
 import com.technicalchallenge.service.TradeStatusService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/tradeStatus")
+@Tag(name = "Trade Status", description = "Trade status reference data and lifecycle state management")
 public class TradeStatusController {
     private static final Logger logger = LoggerFactory.getLogger(TradeStatusController.class);
 

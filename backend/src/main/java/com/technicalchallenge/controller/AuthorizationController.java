@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.technicalchallenge.service.AuthorizationService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/login")
 @Validated
 @AllArgsConstructor
+@Tag(name = "Authorization", description = "User authorization operations")
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;

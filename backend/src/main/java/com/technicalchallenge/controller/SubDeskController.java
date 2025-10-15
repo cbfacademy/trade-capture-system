@@ -20,11 +20,13 @@ import com.technicalchallenge.mapper.SubDeskMapper;
 import com.technicalchallenge.model.SubDesk;
 import com.technicalchallenge.service.SubDeskService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/subdesks")
 @Validated
+@Tag(name = "Sub-Desks", description = "Sub-desk management for detailed organizational breakdown")
 public class SubDeskController {
     private static final Logger logger = LoggerFactory.getLogger(SubDeskController.class);
 

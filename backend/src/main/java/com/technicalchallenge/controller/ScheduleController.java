@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.ScheduleMapper;
 import com.technicalchallenge.model.Schedule;
 import com.technicalchallenge.service.ScheduleService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/schedules")
+@Tag(name = "Schedules", description = "Payment and calculation schedule reference data")
 public class ScheduleController {
     private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
 

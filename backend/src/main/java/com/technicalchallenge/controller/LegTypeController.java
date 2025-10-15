@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.LegTypeMapper;
 import com.technicalchallenge.model.LegType;
 import com.technicalchallenge.service.LegTypeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/legTypes")
+@Tag(name = "Leg Types", description = "Trade leg type reference data and leg classification")
 public class LegTypeController {
     private static final Logger logger = LoggerFactory.getLogger(LegTypeController.class);
 

@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.TradeTypeMapper;
 import com.technicalchallenge.model.TradeType;
 import com.technicalchallenge.service.TradeTypeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/tradeTypes")
+@Tag(name = "Trade Types", description = "Trade type reference data and classification management")
 public class TradeTypeController {
     private static final Logger logger = LoggerFactory.getLogger(TradeTypeController.class);
 

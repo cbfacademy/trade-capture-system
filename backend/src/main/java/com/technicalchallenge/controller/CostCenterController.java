@@ -20,11 +20,13 @@ import com.technicalchallenge.mapper.CostCenterMapper;
 import com.technicalchallenge.model.CostCenter;
 import com.technicalchallenge.service.CostCenterService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/costCenters")
 @Validated
+@Tag(name = "Cost Centers", description = "Cost center management for financial tracking and allocation")
 public class CostCenterController {
     private static final Logger logger = LoggerFactory.getLogger(CostCenterController.class);
 

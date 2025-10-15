@@ -20,8 +20,11 @@ import com.technicalchallenge.mapper.HolidayCalendarMapper;
 import com.technicalchallenge.model.HolidayCalendar;
 import com.technicalchallenge.service.HolidayCalendarService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/holidayCalendars")
+@Tag(name = "Holiday Calendars", description = "Holiday calendar management for business day calculations")
 public class HolidayCalendarController {
     private static final Logger logger = LoggerFactory.getLogger(HolidayCalendarController.class);
 

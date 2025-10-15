@@ -17,8 +17,11 @@ import com.technicalchallenge.dto.UserProfileDTO;
 import com.technicalchallenge.mapper.UserProfileMapper;
 import com.technicalchallenge.service.UserProfileService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/userProfiles")
+@Tag(name = "User Profiles", description = "User profile management and personal information")
 public class UserProfileController {
     @Autowired
     private UserProfileService userProfileService;

@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.technicalchallenge.model.TradeSubType;
 import com.technicalchallenge.repository.TradeSubTypeRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/tradeSubTypes")
+@Tag(name = "Trade Sub-Types", description = "Trade sub-type reference data for detailed trade classification")
 public class TradeSubTypeController {
     @Autowired
     private TradeSubTypeRepository tradeSubTypeRepository;

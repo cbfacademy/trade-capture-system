@@ -19,11 +19,13 @@ import com.technicalchallenge.dto.TradeLegDTO;
 import com.technicalchallenge.mapper.TradeLegMapper;
 import com.technicalchallenge.service.TradeLegService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/tradeLegs")
 @Validated
+@Tag(name = "Trade Legs", description = "Trade leg operations for managing individual legs of complex trades")
 public class TradeLegController {
     private static final Logger logger = LoggerFactory.getLogger(TradeLegController.class);
 

@@ -21,10 +21,12 @@ import com.technicalchallenge.model.UserPrivilege;
 import com.technicalchallenge.model.UserPrivilegeId;
 import com.technicalchallenge.service.UserPrivilegeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/userPrivileges")
+@Tag(name = "User Privileges", description = "User-privilege assignment and permission management")
 public class UserPrivilegeController {
     private static final Logger logger = LoggerFactory.getLogger(UserPrivilegeController.class);
 
