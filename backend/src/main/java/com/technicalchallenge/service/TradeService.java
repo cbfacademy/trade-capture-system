@@ -1,21 +1,43 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.dto.TradeDTO;
-import com.technicalchallenge.dto.TradeLegDTO;
-import com.technicalchallenge.model.*;
-import com.technicalchallenge.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.technicalchallenge.dto.TradeDTO;
+import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.ApplicationUser;
+import com.technicalchallenge.model.Cashflow;
+import com.technicalchallenge.model.Trade;
+import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.model.TradeSubType;
+import com.technicalchallenge.model.TradeType;
+import com.technicalchallenge.repository.ApplicationUserRepository;
+import com.technicalchallenge.repository.BookRepository;
+import com.technicalchallenge.repository.BusinessDayConventionRepository;
+import com.technicalchallenge.repository.CashflowRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
+import com.technicalchallenge.repository.CurrencyRepository;
+import com.technicalchallenge.repository.HolidayCalendarRepository;
+import com.technicalchallenge.repository.IndexRepository;
+import com.technicalchallenge.repository.LegTypeRepository;
+import com.technicalchallenge.repository.PayRecRepository;
+import com.technicalchallenge.repository.ScheduleRepository;
+import com.technicalchallenge.repository.TradeLegRepository;
+import com.technicalchallenge.repository.TradeRepository;
+import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.repository.TradeSubTypeRepository;
+import com.technicalchallenge.repository.TradeTypeRepository;
 
 @Service
 @Transactional
@@ -54,8 +76,6 @@ public class TradeService {
     private BusinessDayConventionRepository businessDayConventionRepository;
     @Autowired
     private PayRecRepository payRecRepository;
-    @Autowired
-    private AdditionalInfoService additionalInfoService;
 
     public List<Trade> getAllTrades() {
         logger.info("Retrieving all trades");

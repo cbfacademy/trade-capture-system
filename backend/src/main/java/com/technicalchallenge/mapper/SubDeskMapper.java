@@ -1,12 +1,13 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.SubDeskDTO;
-import com.technicalchallenge.model.SubDesk;
-import com.technicalchallenge.repository.DeskRepository;
-import com.technicalchallenge.model.Desk;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.SubDeskDTO;
+import com.technicalchallenge.model.Desk;
+import com.technicalchallenge.model.SubDesk;
+import com.technicalchallenge.repository.DeskRepository;
 
 @Component
 public class SubDeskMapper {

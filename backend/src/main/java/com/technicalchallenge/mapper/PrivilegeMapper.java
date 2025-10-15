@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.PrivilegeDTO;
-import com.technicalchallenge.model.Privilege;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.PrivilegeDTO;
+import com.technicalchallenge.model.Privilege;
 
 @Component
 public class PrivilegeMapper {

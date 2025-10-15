@@ -1,21 +1,16 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.CashflowDTO;
-import com.technicalchallenge.model.Cashflow;
-import com.technicalchallenge.model.PayRec;
-import com.technicalchallenge.model.LegType;
-import com.technicalchallenge.model.BusinessDayConvention;
-import com.technicalchallenge.repository.PayRecRepository;
-import com.technicalchallenge.repository.LegTypeRepository;
-import com.technicalchallenge.repository.BusinessDayConventionRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.technicalchallenge.dto.CashflowDTO;
+import com.technicalchallenge.model.Cashflow;
+import com.technicalchallenge.repository.BusinessDayConventionRepository;
+import com.technicalchallenge.repository.LegTypeRepository;
+import com.technicalchallenge.repository.PayRecRepository;
+
 @Component
 public class CashflowMapper {
-    @Autowired
-    private ModelMapper modelMapper;
     @Autowired
     private PayRecRepository payRecRepository;
     @Autowired

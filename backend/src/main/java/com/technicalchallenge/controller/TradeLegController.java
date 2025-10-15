@@ -1,21 +1,25 @@
 package com.technicalchallenge.controller;
 
-import com.technicalchallenge.dto.TradeLegDTO;
-import com.technicalchallenge.mapper.TradeLegMapper;
-import com.technicalchallenge.model.TradeLeg;
-import com.technicalchallenge.service.TradeLegService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.mapper.TradeLegMapper;
+import com.technicalchallenge.service.TradeLegService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/tradeLegs")
@@ -37,7 +41,7 @@ public class TradeLegController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TradeLegDTO> getTradeLegById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<TradeLegDTO> getTradeLegById(@PathVariable Long id) {
         logger.debug("Fetching trade leg by id: {}", id);
         return tradeLegService.getTradeLegById(id)
                 .map(tradeLegMapper::toDto)
@@ -61,7 +65,7 @@ public class TradeLegController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTradeLeg(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteTradeLeg(@PathVariable Long id) {
         logger.warn("Deleting trade leg with id: {}", id);
         tradeLegService.deleteTradeLeg(id);
         return ResponseEntity.noContent().build();

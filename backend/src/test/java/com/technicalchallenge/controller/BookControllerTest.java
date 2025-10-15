@@ -1,34 +1,32 @@
 package com.technicalchallenge.controller;
 
-import com.technicalchallenge.dto.BookDTO;
-import com.technicalchallenge.mapper.BookMapper;
-import com.technicalchallenge.model.Book;
-import com.technicalchallenge.service.BookService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.technicalchallenge.dto.BookDTO;
+import com.technicalchallenge.mapper.BookMapper;
+import com.technicalchallenge.model.Book;
+import com.technicalchallenge.service.BookService;
+
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private BookService bookService;
 
-    @MockBean
+    @MockitoBean
     private BookMapper bookMapper;
 
     @BeforeEach

@@ -1,7 +1,8 @@
 package com.technicalchallenge.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor

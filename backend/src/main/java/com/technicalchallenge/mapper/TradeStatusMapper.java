@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.TradeStatusDTO;
-import com.technicalchallenge.model.TradeStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.TradeStatusDTO;
+import com.technicalchallenge.model.TradeStatus;
 
 @Component
 public class TradeStatusMapper {

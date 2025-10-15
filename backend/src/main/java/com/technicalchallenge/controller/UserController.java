@@ -1,13 +1,26 @@
 package com.technicalchallenge.controller;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.technicalchallenge.dto.UserDTO;
 import com.technicalchallenge.mapper.ApplicationUserMapper;
 import com.technicalchallenge.model.ApplicationUser;
-import com.technicalchallenge.model.TradeType;
 import com.technicalchallenge.service.ApplicationUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,15 +29,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.validation.Valid;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/users")
@@ -66,7 +71,7 @@ public class UserController {
     })
     public ResponseEntity<UserDTO> getUserByLoginId(
             @Parameter(description = "Unique login identifier of the user", required = true)
-            @PathVariable("loginId") String loginId) {
+            @PathVariable String loginId) {
         logger.debug("Fetching user by loginId: {}", loginId);
         Optional<ApplicationUser> user = applicationUserService.getAllUsers().stream()
                 .filter(u -> u.getLoginId().equals(loginId))
@@ -123,7 +128,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found"),
         @ApiResponse(responseCode = "400", description = "Invalid user data provided or user ID format")
     })
-    public ResponseEntity<UserDTO> updateUser(@PathVariable(name = "id") Long id, @Valid @RequestBody UserDTO userDto) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDto) {
         logger.info("Updating user with id: {}", id);
         ApplicationUser user = applicationUserMapper.toEntity(userDto);
         ApplicationUser updatedUser = applicationUserService.updateUser(id, user);

@@ -1,14 +1,15 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.UserDTO;
-import com.technicalchallenge.model.ApplicationUser;
-import com.technicalchallenge.model.UserProfile;
-import com.technicalchallenge.repository.UserProfileRepository;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import com.technicalchallenge.dto.UserDTO;
+import com.technicalchallenge.model.ApplicationUser;
+import com.technicalchallenge.model.UserProfile;
+import com.technicalchallenge.repository.UserProfileRepository;
 
 @Component
 public class ApplicationUserMapper {

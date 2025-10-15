@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.UserProfileDTO;
-import com.technicalchallenge.model.UserProfile;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.UserProfileDTO;
+import com.technicalchallenge.model.UserProfile;
 
 @Component
 public class UserProfileMapper {
@@ -19,4 +20,3 @@ public class UserProfileMapper {
         return modelMapper.map(dto, UserProfile.class);
     }
 }
-

@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.IndexDTO;
-import com.technicalchallenge.model.Index;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.IndexDTO;
+import com.technicalchallenge.model.Index;
 
 @Component
 public class IndexMapper {

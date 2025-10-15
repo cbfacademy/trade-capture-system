@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.CurrencyDTO;
-import com.technicalchallenge.model.Currency;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.CurrencyDTO;
+import com.technicalchallenge.model.Currency;
 
 @Component
 public class CurrencyMapper {

@@ -1,23 +1,16 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.dto.TradeLegDTO;
-import com.technicalchallenge.model.TradeLeg;
-import com.technicalchallenge.repository.TradeLegRepository;
-import com.technicalchallenge.repository.CurrencyRepository;
-import com.technicalchallenge.repository.LegTypeRepository;
-import com.technicalchallenge.repository.IndexRepository;
-import com.technicalchallenge.repository.HolidayCalendarRepository;
-import com.technicalchallenge.repository.ScheduleRepository;
-import com.technicalchallenge.repository.BusinessDayConventionRepository;
-import com.technicalchallenge.repository.PayRecRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.repository.TradeLegRepository;
 
 @Service
 public class TradeLegService {
@@ -25,20 +18,6 @@ public class TradeLegService {
 
     @Autowired
     private TradeLegRepository tradeLegRepository;
-    @Autowired
-    private CurrencyRepository currencyRepository;
-    @Autowired
-    private LegTypeRepository legTypeRepository;
-    @Autowired
-    private IndexRepository indexRepository;
-    @Autowired
-    private HolidayCalendarRepository holidayCalendarRepository;
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-    @Autowired
-    private BusinessDayConventionRepository businessDayConventionRepository;
-    @Autowired
-    private PayRecRepository payRecRepository;
 
     public List<TradeLeg> getAllTradeLegs() {
         logger.info("Retrieving all trade legs");

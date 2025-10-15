@@ -1,10 +1,11 @@
 package com.technicalchallenge.repository;
 
-import com.technicalchallenge.model.PayRec;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.technicalchallenge.model.PayRec;
 
 @Repository
 public interface PayRecRepository extends JpaRepository<PayRec, Long> {

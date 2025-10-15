@@ -1,12 +1,13 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.model.Counterparty;
-import com.technicalchallenge.repository.CounterpartyRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.technicalchallenge.model.Counterparty;
+import com.technicalchallenge.repository.CounterpartyRepository;
 
 @Service
 public class CounterpartyService {

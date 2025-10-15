@@ -1,14 +1,28 @@
 package com.technicalchallenge.controller;
 
-import com.technicalchallenge.dto.CashflowDTO;
-import com.technicalchallenge.dto.CashflowGenerationRequest;
-import com.technicalchallenge.mapper.CashflowMapper;
-import com.technicalchallenge.model.Cashflow;
-import com.technicalchallenge.service.CashflowService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.technicalchallenge.dto.CashflowDTO;
+import com.technicalchallenge.dto.CashflowGenerationRequest;
+import com.technicalchallenge.mapper.CashflowMapper;
+import com.technicalchallenge.service.CashflowService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,18 +31,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.validation.Valid;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import java.math.BigDecimal;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/cashflows")
@@ -70,7 +73,7 @@ public class CashflowController {
     })
     public ResponseEntity<CashflowDTO> getCashflowById(
             @Parameter(description = "Unique identifier of the cashflow", required = true)
-            @PathVariable(name = "id") Long id) {
+            @PathVariable Long id) {
         logger.debug("Fetching cashflow by id: {}", id);
         return cashflowService.getCashflowById(id)
                 .map(cashflowMapper::toDto)
@@ -111,7 +114,7 @@ public class CashflowController {
         @ApiResponse(responseCode = "404", description = "Cashflow not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<Void> deleteCashflow(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteCashflow(@PathVariable Long id) {
         logger.warn("Deleting cashflow with id: {}", id);
         cashflowService.deleteCashflow(id);
         return ResponseEntity.noContent().build();
@@ -150,7 +153,7 @@ public class CashflowController {
                 if ("Fixed".equalsIgnoreCase(leg.getLegType())) {
                     long days = java.time.temporal.ChronoUnit.DAYS.between(valueDate, nextValueDate);
                     double rate = leg.getRate() != null ? leg.getRate() : 0.0;
-                    paymentValue = leg.getNotional().multiply(BigDecimal.valueOf(rate)).multiply(BigDecimal.valueOf(days)).divide(BigDecimal.valueOf(360), 2, BigDecimal.ROUND_HALF_UP);
+                    paymentValue = leg.getNotional().multiply(BigDecimal.valueOf(rate)).multiply(BigDecimal.valueOf(days)).divide(BigDecimal.valueOf(360), 2, RoundingMode.HALF_UP);
                 }
                 // For floating, paymentValue remains 0
                 CashflowDTO cf = new CashflowDTO();

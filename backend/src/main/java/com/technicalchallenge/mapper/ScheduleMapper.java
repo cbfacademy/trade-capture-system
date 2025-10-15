@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.ScheduleDTO;
-import com.technicalchallenge.model.Schedule;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.ScheduleDTO;
+import com.technicalchallenge.model.Schedule;
 
 @Component
 public class ScheduleMapper {

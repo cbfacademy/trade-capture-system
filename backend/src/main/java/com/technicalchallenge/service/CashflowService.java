@@ -1,19 +1,19 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.dto.CashflowDTO;
-import com.technicalchallenge.model.Cashflow;
-import com.technicalchallenge.repository.CashflowRepository;
-import com.technicalchallenge.repository.BusinessDayConventionRepository;
-import com.technicalchallenge.repository.LegTypeRepository;
-import com.technicalchallenge.repository.PayRecRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.technicalchallenge.dto.CashflowDTO;
+import com.technicalchallenge.model.Cashflow;
+import com.technicalchallenge.repository.BusinessDayConventionRepository;
+import com.technicalchallenge.repository.CashflowRepository;
+import com.technicalchallenge.repository.LegTypeRepository;
+import com.technicalchallenge.repository.PayRecRepository;
 
 @Service
 public class CashflowService {

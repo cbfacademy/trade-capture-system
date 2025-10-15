@@ -1,10 +1,11 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.PayRecDTO;
-import com.technicalchallenge.model.PayRec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.technicalchallenge.dto.PayRecDTO;
+import com.technicalchallenge.model.PayRec;
 
 @Component
 public class PayRecMapper {

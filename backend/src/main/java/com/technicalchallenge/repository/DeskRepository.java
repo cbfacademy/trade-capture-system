@@ -1,8 +1,9 @@
 package com.technicalchallenge.repository;
 
-import com.technicalchallenge.model.Desk;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.technicalchallenge.model.Desk;
 
 @Repository
 public interface DeskRepository extends JpaRepository<Desk, Long> {}

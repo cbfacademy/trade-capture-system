@@ -1,12 +1,13 @@
 package com.technicalchallenge.service;
 
-import com.technicalchallenge.model.UserProfile;
-import com.technicalchallenge.repository.UserProfileRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.technicalchallenge.model.UserProfile;
+import com.technicalchallenge.repository.UserProfileRepository;
 
 @Service
 public class UserProfileService {

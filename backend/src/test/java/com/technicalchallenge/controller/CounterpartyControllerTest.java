@@ -1,34 +1,32 @@
 package com.technicalchallenge.controller;
 
-import com.technicalchallenge.dto.CounterpartyDTO;
-import com.technicalchallenge.mapper.CounterpartyMapper;
-import com.technicalchallenge.model.Counterparty;
-import com.technicalchallenge.service.CounterpartyService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.technicalchallenge.dto.CounterpartyDTO;
+import com.technicalchallenge.mapper.CounterpartyMapper;
+import com.technicalchallenge.model.Counterparty;
+import com.technicalchallenge.service.CounterpartyService;
+
 @WebMvcTest(CounterpartyController.class)
 public class CounterpartyControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private CounterpartyService counterpartyService;
 
-    @MockBean
+    @MockitoBean
     private CounterpartyMapper counterpartyMapper;
 
     @BeforeEach

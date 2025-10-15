@@ -1,13 +1,20 @@
 package com.technicalchallenge.mapper;
 
-import com.technicalchallenge.dto.TradeLegDTO;
-import com.technicalchallenge.model.Schedule;
-import com.technicalchallenge.model.TradeLeg;
-import com.technicalchallenge.repository.*;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.Schedule;
+import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.repository.BusinessDayConventionRepository;
+import com.technicalchallenge.repository.CurrencyRepository;
+import com.technicalchallenge.repository.HolidayCalendarRepository;
+import com.technicalchallenge.repository.IndexRepository;
+import com.technicalchallenge.repository.LegTypeRepository;
+import com.technicalchallenge.repository.PayRecRepository;
+import com.technicalchallenge.repository.ScheduleRepository;
 
 @Component
 public class TradeLegMapper {
