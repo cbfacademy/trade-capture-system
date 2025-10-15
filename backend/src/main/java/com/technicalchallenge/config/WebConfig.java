@@ -9,17 +9,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig {
     
-    @Value("${management.endpoints.web.cors.allowed-origins}")
+    @Value("${management.endpoints.web.cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;
     
-    @Value("${management.endpoints.web.cors.allowed-methods}")
+    @Value("${management.endpoints.web.cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}")
     private String allowedMethods;
     
-    @Value("${management.endpoints.web.cors.allowed-headers}")
+    @Value("${management.endpoints.web.cors.allowed-headers:*}")
     private String allowedHeaders;
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
