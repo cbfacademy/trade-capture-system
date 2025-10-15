@@ -157,7 +157,7 @@ public class TradeLegControllerTest {
     void testCreateTradeLegValidationFailure_NegativeNotional() throws Exception {
         // Given
         tradeLegDTO.setNotional(BigDecimal.valueOf(-1000000.0));
-
+        
         // When/Then
         mockMvc.perform(post("/api/tradeLegs")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -19,9 +19,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.List;
-
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 @Tag(name = "Trades", description = "Trade management operations including booking, searching, and lifecycle management")
 public class TradeController {
     private static final Logger logger = LoggerFactory.getLogger(TradeController.class);
-
+  
     @Autowired
     private TradeService tradeService;
     @Autowired
@@ -86,12 +86,15 @@ public class TradeController {
     })
     public ResponseEntity<?> createTrade(
             @Parameter(description = "Trade details for creation", required = true)
-            @Valid @RequestBody TradeDTO tradeDTO) {
+             @RequestBody TradeDTO tradeDTO) {
         logger.info("Creating new trade: {}", tradeDTO);
+        if (tradeDTO.getTradeDate() == null) {
+            return ResponseEntity.badRequest().body("Trade date is required");
+        }
         if (tradeDTO.getBookName() == null || tradeDTO.getBookName().isBlank() ||
-        tradeDTO.getCounterpartyName() == null || tradeDTO.getCounterpartyName().isBlank()) {
-        return ResponseEntity.badRequest().body("Book and Counterparty are required");
-    }
+            tradeDTO.getCounterpartyName() == null || tradeDTO.getCounterpartyName().isBlank()) {
+            return ResponseEntity.badRequest().body("Book and Counterparty are required");
+        }
 
         try {
             Trade trade = tradeMapper.toEntity(tradeDTO);
