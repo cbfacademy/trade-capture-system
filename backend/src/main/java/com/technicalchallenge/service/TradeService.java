@@ -69,7 +69,7 @@ public class TradeService {
 
     @Transactional
     public Trade createTrade(TradeDTO tradeDTO) {
-        logger.info("Creating new trade with ID: {}", tradeDTO.getTradeId());
+            logger.info("Creating new trade with ID: {}", tradeDTO.getTradeId());
 
         // Generate trade ID if not provided
         if (tradeDTO.getTradeId() == null) {
@@ -373,6 +373,7 @@ public class TradeService {
             var legDTO = tradeDTO.getTradeLegs().get(i);
 
             TradeLeg tradeLeg = new TradeLeg();
+            tradeLeg.setLegId(legDTO.getLegId());
             tradeLeg.setTrade(savedTrade);
             tradeLeg.setNotional(legDTO.getNotional());
             tradeLeg.setRate(legDTO.getRate());

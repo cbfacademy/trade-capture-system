@@ -2,12 +2,23 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.Book;
+import com.technicalchallenge.model.Cashflow;
+import com.technicalchallenge.model.Counterparty;
+import com.technicalchallenge.model.LegType;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.repository.BookRepository;
 import com.technicalchallenge.repository.CashflowRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
 import com.technicalchallenge.repository.TradeRepository;
 import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.repository.LegTypeRepository;
+
+import io.cucumber.java.lu.a;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +27,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +46,9 @@ class TradeServiceTest {
 
     @Mock
     private TradeLegRepository tradeLegRepository;
+    
+    @Mock
+    private LegTypeRepository legTypeRepository;
 
     @Mock
     private CashflowRepository cashflowRepository;
@@ -40,6 +58,14 @@ class TradeServiceTest {
 
     @Mock
     private AdditionalInfoService additionalInfoService;
+    
+    @Mock
+    private BookRepository bookRepository;
+
+    @Mock
+    private CounterpartyRepository counterpartyRepository;
+    
+  
 
     @InjectMocks
     private TradeService tradeService;
@@ -55,7 +81,13 @@ class TradeServiceTest {
         tradeDTO.setTradeDate(LocalDate.of(2025, 1, 15));
         tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 17));
         tradeDTO.setTradeMaturityDate(LocalDate.of(2026, 1, 17));
+        tradeDTO.setBookId(1L);
+        tradeDTO.setCounterpartyId(1L); 
+        tradeDTO.setTradeStatusId(1L);
+        
 
+        TradeLeg leg = new TradeLeg();
+        leg.setLegId(1L);
         TradeLegDTO leg1 = new TradeLegDTO();
         leg1.setNotional(BigDecimal.valueOf(1000000));
         leg1.setRate(0.05);
@@ -69,17 +101,37 @@ class TradeServiceTest {
         trade = new Trade();
         trade.setId(1L);
         trade.setTradeId(100001L);
+        trade.setTradeLegs(Arrays.asList(leg, leg));
+
+        
     }
 
     @Test
     void testCreateTrade_Success() {
-        // Given
-        when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+   
+        Book book = new Book();
+        book.setId(1L);
+        Counterparty counterparty = new Counterparty();
+        counterparty.setId(1L);
+        TradeStatus tradestatus = new TradeStatus();
+        tradestatus.setId(1L);
+        
 
-        // When
+        TradeLeg tradeLeg = new TradeLeg();
+        tradeLeg.setLegId(1L);
+        when(tradeLegRepository.save(any(TradeLeg.class))).thenReturn(tradeLeg);
+
+         
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(counterpartyRepository.findById(1L)).thenReturn(Optional.of(counterparty));
+        when(tradeStatusRepository.findByTradeStatus("NEW")).thenReturn(Optional.of(tradestatus));
+       
+
+        when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+         
         Trade result = tradeService.createTrade(tradeDTO);
 
-        // Then
+        // Then     
         assertNotNull(result);
         assertEquals(100001L, result.getTradeId());
         verify(tradeRepository).save(any(Trade.class));
@@ -96,7 +148,7 @@ class TradeServiceTest {
         });
 
         // This assertion is intentionally wrong - candidates need to fix it
-        assertEquals("Wrong error message", exception.getMessage());
+        assertEquals("Start date cannot be before trade date", exception.getMessage());
     }
 
     @Test
@@ -139,10 +191,20 @@ class TradeServiceTest {
 
     @Test
     void testAmendTrade_Success() {
+         Trade trade = new Trade();
+        trade.setTradeId(100001L);
+        trade.setVersion(1); // ✅ Important line
+        trade.setActive(true);
+        TradeLeg tradeLeg = new TradeLeg();
+        tradeLeg.setLegId(1L);
+
+        
         // Given
         when(tradeRepository.findByTradeIdAndActiveTrue(100001L)).thenReturn(Optional.of(trade));
         when(tradeStatusRepository.findByTradeStatus("AMENDED")).thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+        when(tradeLegRepository.save(any(TradeLeg.class))).thenReturn(tradeLeg);
+
 
         // When
         Trade result = tradeService.amendTrade(100001L, tradeDTO);
