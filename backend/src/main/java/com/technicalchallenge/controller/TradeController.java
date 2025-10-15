@@ -37,13 +37,10 @@ public class TradeController {
     private TradeMapper tradeMapper;
 
     @GetMapping
-    @Operation(summary = "Get all trades",
-               description = "Retrieves a list of all trades in the system. Returns comprehensive trade information including legs and cashflows.")
+    @Operation(summary = "Get all trades", description = "Retrieves a list of all trades in the system. Returns comprehensive trade information including legs and cashflows.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved all trades",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all trades", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public List<TradeDTO> getAllTrades() {
         logger.info("Fetching all trades");
@@ -53,18 +50,14 @@ public class TradeController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get trade by ID",
-               description = "Retrieves a specific trade by its unique identifier")
+    @Operation(summary = "Get trade by ID", description = "Retrieves a specific trade by its unique identifier")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Trade found and returned successfully",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Trade not found"),
-        @ApiResponse(responseCode = "400", description = "Invalid trade ID format")
+            @ApiResponse(responseCode = "200", description = "Trade found and returned successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Trade not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid trade ID format")
     })
     public ResponseEntity<TradeDTO> getTradeById(
-            @Parameter(description = "Unique identifier of the trade", required = true)
-            @PathVariable(name = "id") Long id) {
+            @Parameter(description = "Unique identifier of the trade", required = true) @PathVariable(name = "id") Long id) {
         logger.debug("Fetching trade by id: {}", id);
         return tradeService.getTradeById(id)
                 .map(tradeMapper::toDto)
@@ -73,47 +66,37 @@ public class TradeController {
     }
 
     @PostMapping
-    @Operation(summary = "Create new trade",
-               description = "Creates a new trade with the provided details. Automatically generates cashflows and validates business rules.")
+    @Operation(summary = "Create new trade", description = "Creates a new trade with the provided details. Automatically generates cashflows and validates business rules.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Trade created successfully",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid trade data or business rule violation"),
-        @ApiResponse(responseCode = "500", description = "Internal server error during trade creation")
+            @ApiResponse(responseCode = "201", description = "Trade created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid trade data or business rule violation"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during trade creation")
     })
     public ResponseEntity<?> createTrade(
-            @Parameter(description = "Trade details for creation", required = true)
+            @Parameter(description = "Trade details for creation", required = true) 
             @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Creating new trade: {}", tradeDTO);
-        try {
-            Trade trade = tradeMapper.toEntity(tradeDTO);
-            tradeService.populateReferenceDataByName(trade, tradeDTO);
-            Trade savedTrade = tradeService.saveTrade(trade, tradeDTO);
-            TradeDTO responseDTO = tradeMapper.toDto(savedTrade);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
-        } catch (Exception e) {
-            logger.error("Error creating trade: {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().body("Error creating trade: " + e.getMessage());
-        }
+
+        Trade trade = tradeMapper.toEntity(tradeDTO);
+        tradeService.populateReferenceDataByName(trade, tradeDTO);
+        Trade savedTrade = tradeService.saveTrade(trade, tradeDTO);
+        TradeDTO responseDTO = tradeMapper.toDto(savedTrade);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update existing trade",
-               description = "Updates an existing trade with new information. Subject to business rule validation and user privileges.")
+    @Operation(summary = "Update existing trade", description = "Updates an existing trade with new information. Subject to business rule validation and user privileges.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Trade updated successfully",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Trade not found"),
-        @ApiResponse(responseCode = "400", description = "Invalid trade data or business rule violation"),
-        @ApiResponse(responseCode = "403", description = "Insufficient privileges to update trade")
+            @ApiResponse(responseCode = "200", description = "Trade updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Trade not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid trade data or business rule violation"),
+            @ApiResponse(responseCode = "403", description = "Insufficient privileges to update trade")
     })
     public ResponseEntity<?> updateTrade(
-            @Parameter(description = "Unique identifier of the trade to update", required = true)
-            @PathVariable Long id,
-            @Parameter(description = "Updated trade details", required = true)
-            @Valid @RequestBody TradeDTO tradeDTO) {
+            @Parameter(description = "Unique identifier of the trade to update", required = true) @PathVariable Long id,
+            @Parameter(description = "Updated trade details", required = true) @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Updating trade with id: {}", id);
         try {
             tradeDTO.setTradeId(id); // Ensure the ID matches
@@ -127,17 +110,15 @@ public class TradeController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete trade",
-               description = "Deletes an existing trade. This is a soft delete that changes the trade status.")
+    @Operation(summary = "Delete trade", description = "Deletes an existing trade. This is a soft delete that changes the trade status.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Trade deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Trade not found"),
-        @ApiResponse(responseCode = "400", description = "Trade cannot be deleted in current status"),
-        @ApiResponse(responseCode = "403", description = "Insufficient privileges to delete trade")
+            @ApiResponse(responseCode = "200", description = "Trade deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Trade not found"),
+            @ApiResponse(responseCode = "400", description = "Trade cannot be deleted in current status"),
+            @ApiResponse(responseCode = "403", description = "Insufficient privileges to delete trade")
     })
     public ResponseEntity<?> deleteTrade(
-            @Parameter(description = "Unique identifier of the trade to delete", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "Unique identifier of the trade to delete", required = true) @PathVariable Long id) {
         logger.info("Deleting trade with id: {}", id);
         try {
             tradeService.deleteTrade(id);
@@ -149,19 +130,15 @@ public class TradeController {
     }
 
     @PostMapping("/{id}/terminate")
-    @Operation(summary = "Terminate trade",
-               description = "Terminates an existing trade before its natural maturity date")
+    @Operation(summary = "Terminate trade", description = "Terminates an existing trade before its natural maturity date")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Trade terminated successfully",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Trade not found"),
-        @ApiResponse(responseCode = "400", description = "Trade cannot be terminated in current status"),
-        @ApiResponse(responseCode = "403", description = "Insufficient privileges to terminate trade")
+            @ApiResponse(responseCode = "200", description = "Trade terminated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Trade not found"),
+            @ApiResponse(responseCode = "400", description = "Trade cannot be terminated in current status"),
+            @ApiResponse(responseCode = "403", description = "Insufficient privileges to terminate trade")
     })
     public ResponseEntity<?> terminateTrade(
-            @Parameter(description = "Unique identifier of the trade to terminate", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "Unique identifier of the trade to terminate", required = true) @PathVariable Long id) {
         logger.info("Terminating trade with id: {}", id);
         try {
             Trade terminatedTrade = tradeService.terminateTrade(id);
@@ -174,19 +151,15 @@ public class TradeController {
     }
 
     @PostMapping("/{id}/cancel")
-    @Operation(summary = "Cancel trade",
-               description = "Cancels an existing trade by changing its status to cancelled")
+    @Operation(summary = "Cancel trade", description = "Cancels an existing trade by changing its status to cancelled")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Trade cancelled successfully",
-                    content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = TradeDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Trade not found"),
-        @ApiResponse(responseCode = "400", description = "Trade cannot be cancelled in current status"),
-        @ApiResponse(responseCode = "403", description = "Insufficient privileges to cancel trade")
+            @ApiResponse(responseCode = "200", description = "Trade cancelled successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Trade not found"),
+            @ApiResponse(responseCode = "400", description = "Trade cannot be cancelled in current status"),
+            @ApiResponse(responseCode = "403", description = "Insufficient privileges to cancel trade")
     })
     public ResponseEntity<?> cancelTrade(
-            @Parameter(description = "Unique identifier of the trade to cancel", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "Unique identifier of the trade to cancel", required = true) @PathVariable Long id) {
         logger.info("Cancelling trade with id: {}", id);
         try {
             Trade cancelledTrade = tradeService.cancelTrade(id);
