@@ -155,7 +155,8 @@ public class TradeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Trade date is required"));
+                .andExpect(jsonPath("$.errors[?(@.field=='tradeDate')]").exists());
+                
 
         verify(tradeService, never()).saveTrade(any(Trade.class), any(TradeDTO.class));
     }
