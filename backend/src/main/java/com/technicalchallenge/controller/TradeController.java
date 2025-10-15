@@ -21,6 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +88,11 @@ public class TradeController {
             @Parameter(description = "Trade details for creation", required = true)
             @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Creating new trade: {}", tradeDTO);
+        if (tradeDTO.getBookName() == null || tradeDTO.getBookName().isBlank() ||
+        tradeDTO.getCounterpartyName() == null || tradeDTO.getCounterpartyName().isBlank()) {
+        return ResponseEntity.badRequest().body("Book and Counterparty are required");
+    }
+
         try {
             Trade trade = tradeMapper.toEntity(tradeDTO);
             tradeService.populateReferenceDataByName(trade, tradeDTO);
