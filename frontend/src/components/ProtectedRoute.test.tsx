@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import ProtectedRoute from './ProtectedRoute';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { renderWithRouter } from '../utils/test-utils';
+import ProtectedRoute from './ProtectedRoute';
 
 describe('ProtectedRoute Component', () => {
   it('renders children when allowed', () => {

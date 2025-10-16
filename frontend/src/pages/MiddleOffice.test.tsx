@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import MiddleOffice from './MiddleOffice';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { renderWithRouter } from '../utils/test-utils';
+import MiddleOffice from './MiddleOffice';
 
 describe('MiddleOffice Page', () => {
   it('renders the welcome heading', () => {

@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import SignUp from './SignUp';
-import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { renderWithQueryClient } from '../utils/test-utils';
+import SignUp from './SignUp';
 
 vi.mock('../utils/api', () => ({
   fetchUserProfiles: vi.fn().mockResolvedValue({ data: [] }),

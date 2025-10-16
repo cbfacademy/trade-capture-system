@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/trading-logo.svg';
 import userStore from "../stores/userStore";

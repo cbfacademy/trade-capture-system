@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import Sidebar from './Sidebar';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { renderWithRouter } from '../utils/test-utils';
+import Sidebar from './Sidebar';
 
 describe('Sidebar Component', () => {
   it('renders the sidebar container', () => {

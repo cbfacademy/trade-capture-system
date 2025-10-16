@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import TraderSales from './TraderSales';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { renderWithRouter } from '../utils/test-utils';
+import TraderSales from './TraderSales';
 
 describe('TraderSales Page', () => {
   it('renders the welcome heading', () => {

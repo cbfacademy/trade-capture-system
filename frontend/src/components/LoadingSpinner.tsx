@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center h-full w-full">
     <svg className="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

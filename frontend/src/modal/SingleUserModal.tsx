@@ -15,7 +15,6 @@ interface UserDetailModalProps {
     setUser: React.Dispatch<React.SetStateAction<ApplicationUser | null>>;
 }
 
-
 const USER_FIELDS = [
     {key: "firstName", label: "First Name", type: "input"},
     {key: "lastName", label: "Last Name", type: "input"},

@@ -1,8 +1,8 @@
-import React from 'react';
-import {AgGridReact} from 'ag-grid-react';
-import {ColDef, SelectionChangedEvent} from 'ag-grid-community';
+import { ColDef, SelectionChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { AgGridReact } from 'ag-grid-react';
+import React from 'react';
 
 interface AGGridTableProps {
     columnDefs: ColDef[];

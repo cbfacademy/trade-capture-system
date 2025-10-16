@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import Profile from './Profile';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { renderWithRouter } from '../utils/test-utils';
+import Profile from './Profile';
 
 describe('Profile Page', () => {
   it('renders the Profile heading', () => {

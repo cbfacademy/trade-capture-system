@@ -1,7 +1,7 @@
-import React from "react";
 import { Dialog } from "@headlessui/react";
-import { CashflowDTO } from "../utils/tradeTypes";
+import React from "react";
 import AGGridTable from "../components/AGGridTable";
+import { CashflowDTO } from "../utils/tradeTypes";
 
 interface CashflowModalProps {
   isOpen: boolean;

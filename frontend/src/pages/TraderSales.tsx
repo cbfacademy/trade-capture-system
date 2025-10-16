@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSearchParams } from "react-router-dom";
 import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";

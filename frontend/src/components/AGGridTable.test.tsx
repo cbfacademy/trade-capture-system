@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import AGGridTable from './AGGridTable';
-import React from 'react';
 
 // Mock AG Grid's module registration
 vi.mock('ag-grid-react', () => ({
