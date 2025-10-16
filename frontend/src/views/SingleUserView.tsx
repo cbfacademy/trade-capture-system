@@ -5,9 +5,9 @@ import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
 import Label from "../components/Label";
 import staticStore from "../stores/staticStore";
-import { ApplicationUser } from "../utils/ApplicationUser";
+import { ApplicationUser } from "../types/user";
 
-interface UserDetailModalProps {
+interface UserDetailViewProps {
     isOpen: boolean;
     onClose: () => void;
     onClickSave: () => void;
@@ -29,7 +29,7 @@ const USER_FIELDS = [
     },
 ];
 
-const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) => {
+const SingleUserView: React.FC<UserDetailViewProps> = observer((props) => {
     const {user, setUser} = props;
     if (!user) return null;
 
@@ -101,4 +101,4 @@ const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) => {
     );
 });
 
-export default SingleUserModal;
+export default SingleUserView;

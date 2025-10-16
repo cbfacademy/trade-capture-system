@@ -5,16 +5,16 @@ import Snackbar from "../components/Snackbar";
 import TradeDetails from "../components/TradeDetails";
 import TradeLegDetails from "../components/TradeLegDetails";
 import userStore from "../stores/userStore";
+import { CashflowDTO, Trade, TradeLeg } from "../types/trade";
 import api from "../utils/api";
 import { formatDatesFromBackend } from "../utils/dateUtils";
-import { CashflowDTO, Trade, TradeLeg } from "../utils/tradeTypes";
 import { convertEmptyStringsToNull, formatTradeForBackend, getDefaultTrade, validateTrade } from "../utils/tradeUtils";
-import CashflowModal from "./CashflowModal";
+import CashflowView from "./CashflowView";
 
 /**
  * Props for SingleTradeModal component
  */
-interface SingleTradeModalProps {
+interface SingleTradeViewProps {
     mode: "view" | "edit";
     trade?: Trade;
     isOpen: boolean;
@@ -24,7 +24,7 @@ interface SingleTradeModalProps {
 /**
  * Modal component for viewing, editing and managing a single trade
  */
-const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
+const SingleTradeView: React.FC<SingleTradeViewProps> = (props) => {
     const [editableTrade, setEditableTrade] = React.useState<Trade | undefined>(props.trade ?? getDefaultTrade());
     const [cashflowModalOpen, setCashflowModalOpen] = React.useState(false);
     const [generatedCashflows, setGeneratedCashflows] = React.useState<CashflowDTO[]>([]);
@@ -296,7 +296,7 @@ const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
                 </div>
             }
             {cashflowModalOpen && (
-                <CashflowModal isOpen={cashflowModalOpen} onClose={() => setCashflowModalOpen(false)}
+                <CashflowView isOpen={cashflowModalOpen} onClose={() => setCashflowModalOpen(false)}
                                cashflows={generatedCashflows}/>
             )}
             <Snackbar open={snackbarOpen} message={snackbarMsg} type={snackbarType}
@@ -305,4 +305,4 @@ const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
     );
 };
 
-export default SingleTradeModal;
+export default SingleTradeView;

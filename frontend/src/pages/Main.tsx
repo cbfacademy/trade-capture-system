@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { useSearchParams } from "react-router-dom";
 import { HomeContent } from "../components/HomeContent";
 import Layout from '../components/Layout';
-import AllUserView from '../modal/AllUserView';
-import UserActionsModal from '../modal/UserActionsModal';
-import { ApplicationUser } from "../utils/ApplicationUser";
+import { ApplicationUser } from "../types/user";
+import AllUserView from '../views/AllUserView';
+import UserActionsView from '../views/UserActionsView';
 
 const Main: React.FC = observer(() => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -23,9 +23,9 @@ const Main: React.FC = observer(() => {
             {view === 'all-users' && (
                 <AllUserView />
             )}
-            {view === 'user-actions' && (
-                <UserActionsModal user={selectedUser || undefined} setView={handleSetView} />
-            )}
+        {view === 'user-actions' && (
+            <UserActionsView user={selectedUser || undefined} setView={handleSetView} />
+        )}
         </Layout>
     );
 });

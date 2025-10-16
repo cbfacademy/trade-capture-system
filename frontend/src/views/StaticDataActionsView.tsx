@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 
-const StaticDataActionsModal: React.FC = observer(() => {
+const StaticDataActionsView: React.FC = observer(() => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState<string>("");
@@ -92,4 +92,4 @@ const StaticDataActionsModal: React.FC = observer(() => {
     )
 });
 
-export default StaticDataActionsModal;
+export default StaticDataActionsView;

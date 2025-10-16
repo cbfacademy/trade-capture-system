@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";
-import StaticDataActionsModal from "../modal/StaticDataActionsModal";
-import TradeActionsModal from "../modal/TradeActionsModal";
+import StaticDataActionsView from "../views/StaticDataActionsView";
+import TradeActionsView from "../views/TradeActionsView";
 
 const MiddleOffice = () => {
     const [searchParams] = useSearchParams();
@@ -10,8 +10,8 @@ const MiddleOffice = () => {
     return (
         <Layout>
             {view === 'default' && <HomeContent/>}
-            {view === 'actions' && <TradeActionsModal/>}
-            {view === 'static' && <StaticDataActionsModal/>}
+            {view === 'actions' && <TradeActionsView/>}
+            {view === 'static' && <StaticDataActionsView/>}
         </Layout>
     );
 };

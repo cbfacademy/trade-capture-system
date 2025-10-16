@@ -2,9 +2,9 @@ import { AllCommunityModule, ModuleRegistry, SelectionChangedEvent } from 'ag-gr
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { ApplicationUser } from "../types/user";
 import { getColDefFromResult, getRowDataFromData } from "../utils/agGridUtils";
 import { fetchAllUsers } from "../utils/api";
-import { ApplicationUser } from "../utils/ApplicationUser";
 import AGGridTable from "./../components/AGGridTable";
 import Button from "./../components/Button";
 import LoadingSpinner from "./../components/LoadingSpinner";

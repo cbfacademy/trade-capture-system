@@ -6,9 +6,9 @@ import Input from "../components/Input";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 import staticStore from "../stores/staticStore";
+import { ApplicationUser } from "../types/user";
 import api, { createUser } from "../utils/api";
-import { ApplicationUser } from "../utils/ApplicationUser";
-import SingleUserModal from "./SingleUserModal";
+import SingleUserView from "./SingleUserView";
 
 
 function getDefaultUser(): ApplicationUser {
@@ -25,12 +25,12 @@ function getDefaultUser(): ApplicationUser {
     };
 }
 
-interface UserActionsModalProps {
+interface UserActionsViewProps {
     user?: ApplicationUser;
     setView?: (view: string, user?: ApplicationUser) => void;
 }
 
-const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ user: initialUser, setView }) => {
+const UserActionsView: React.FC<UserActionsViewProps> = observer(({ user: initialUser, setView }) => {
     const [userId, setUserId] = React.useState<string>("");
     const [snackBarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [snackBarType, setSnackbarType] = React.useState<'success' | 'error'>("success");
@@ -135,7 +135,7 @@ const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ user: init
             </div>
             <div>
                 {loading ? <LoadingSpinner/> : null}
-                {user && !loading && <SingleUserModal
+                {user && !loading && <SingleUserView
                     isOpen={!!user}
                     user={user}
                     setUser={setUser}
@@ -149,4 +149,4 @@ const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ user: init
     )
 })
 
-export default UserActionsModal;
+export default UserActionsView;

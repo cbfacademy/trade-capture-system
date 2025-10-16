@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { observer } from "mobx-react-lite";
 import React from "react";
 import AGGridTable from "../components/AGGridTable";
+import { Trade } from "../types/trade";
 import { getColDefFromResult, getRowDataFromData } from "../utils/agGridUtils";
 import { fetchTrades } from "../utils/api";
-import { Trade } from "../utils/tradeTypes";
 
 
-const TradeBlotterModal: React.FC = observer(() => {
+const TradeBlotterView: React.FC = observer(() => {
     const [trades, setTrades] = React.useState<Trade[]>([]);
 
     const {data, isSuccess} = useQuery({
@@ -41,4 +41,4 @@ const TradeBlotterModal: React.FC = observer(() => {
     )
 });
 
-export default TradeBlotterModal;
+export default TradeBlotterView;

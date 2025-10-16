@@ -2,7 +2,7 @@ import React from 'react';
 import { useSearchParams } from "react-router-dom";
 import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";
-import TradeActionsModal from "../modal/TradeActionsModal";
+import TradeActionsView from "../views/TradeActionsView";
 
 const Support: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -10,7 +10,7 @@ const Support: React.FC = () => {
     return (
         <Layout>
             {view === 'default' && <HomeContent/>}
-            {view === 'actions' && <TradeActionsModal/>}
+                {view === 'actions' && <TradeActionsView/>}
         </Layout>
     );
 };

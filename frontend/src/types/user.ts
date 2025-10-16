@@ -10,3 +10,6 @@ export interface ApplicationUser {
   lastModifiedTimestamp: string;
 }
 
+export interface UserType {
+  userType: string;
+}

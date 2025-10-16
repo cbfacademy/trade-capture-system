@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";
-import TradeActionsModal from "../modal/TradeActionsModal";
-import TradeBlotterModal from "../modal/TradeBlotterModal";
+import TradeActionsView from "../views/TradeActionsView";
+import TradeBlotterView from "../views/TradeBlotterView";
 
 const TraderSales = () => {
     const [searchParams] = useSearchParams();
@@ -12,8 +12,8 @@ const TraderSales = () => {
         <div>
             <Layout>
                 {view === 'default' && <HomeContent/>}
-                {view === 'actions' && <TradeActionsModal/>}
-                {view === 'history' && <TradeBlotterModal/>}
+                {view === 'actions' && <TradeActionsView/>}
+                {view === 'history' && <TradeBlotterView/>}
             </Layout>
         </div>
     );

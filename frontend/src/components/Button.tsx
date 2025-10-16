@@ -17,13 +17,13 @@ const variantClasses = {
   secondary: 'bg-red-600 hover:bg-red-700 text-white',
 };
 
-const Button: React.FC<ButtonProps> = ({
+const Button = ({
   variant = 'primary',
   size = 'md',
   className = '',
   children,
   ...props
-}) => {
+}: ButtonProps) => {
   return (
     <button
       className={`rounded transition font-semibold shadow ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
