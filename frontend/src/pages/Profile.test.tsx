@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderWithRouter } from '../utils/test-utils';
+import { renderWithRouter } from '../utils/testUtils';
 import Profile from './Profile';
 
 describe('Profile Page', () => {

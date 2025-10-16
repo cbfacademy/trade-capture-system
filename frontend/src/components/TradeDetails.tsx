@@ -1,6 +1,6 @@
 import React from "react";
+import { Trade } from "../types/trade";
 import { DISABLED_FIELDS, TRADE_FIELDS } from "../utils/tradeFormFields";
-import { Trade } from "../utils/tradeTypes";
 import FieldRenderer from "./FieldRenderer";
 import Label from "./Label";
 

@@ -1,5 +1,5 @@
-import {makeAutoObservable, observable} from "mobx";
-import {UserType} from "../utils/UserType";
+import { makeAutoObservable, observable } from "mobx";
+import { UserType } from "../types/user";
 import api from "../utils/api";
 
 class StaticStore {

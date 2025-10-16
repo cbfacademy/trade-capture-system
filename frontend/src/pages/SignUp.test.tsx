@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithQueryClient } from '../utils/test-utils';
+import { renderWithQueryClient } from '../utils/testUtils';
 import SignUp from './SignUp';
 
 vi.mock('../utils/api', () => ({

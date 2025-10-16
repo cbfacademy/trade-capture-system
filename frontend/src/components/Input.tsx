@@ -18,14 +18,14 @@ const variantClasses = {
   secondary: 'border-red-600 focus:border-red-700 focus:ring-red-200',
 };
 
-const Input: React.FC<InputProps> = ({
+const Input = ({
   variant = 'primary',
   size = 'md',
   label,
   error,
   className = '',
   ...props
-}) => (
+}: InputProps) => (
   <div className="flex flex-col gap-1">
     <input
       placeholder={props.placeholder || label}
