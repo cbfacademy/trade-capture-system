@@ -1,9 +1,9 @@
-import React, {ReactNode} from 'react';
-import {Navigate} from 'react-router-dom';
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
     isAllowed: boolean;
-    redirectPath: string;
+    redirectPath?: string;
     children: ReactNode;
 }
 

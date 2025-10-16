@@ -1,13 +1,13 @@
 import React from "react";
-import Label from "./Label";
-import FieldRenderer from "./FieldRenderer";
+import { DISABLED_FIELDS, TRADE_FIELDS } from "../utils/tradeFormFields";
 import { Trade } from "../utils/tradeTypes";
-import { TRADE_FIELDS, DISABLED_FIELDS } from "../utils/tradeFormFields";
+import FieldRenderer from "./FieldRenderer";
+import Label from "./Label";
 
 /**
  * Props for the TradeDetails component
  */
-export interface TradeDetailsProps {
+interface TradeDetailsProps {
     trade?: Trade;
     mode: "view" | "edit";
     onFieldChange?: (key: keyof Trade, value: unknown) => void;

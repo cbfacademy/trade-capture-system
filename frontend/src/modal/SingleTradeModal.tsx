@@ -1,16 +1,15 @@
 import React from "react";
 import Button from "../components/Button";
-import {Trade, TradeLeg} from "../utils/tradeTypes";
-import CashflowModal from "./CashflowModal";
-import api from "../utils/api";
-import {CashflowDTO} from "../utils/tradeTypes";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 import TradeDetails from "../components/TradeDetails";
 import TradeLegDetails from "../components/TradeLegDetails";
-import {getDefaultTrade, validateTrade, formatTradeForBackend, convertEmptyStringsToNull} from "../utils/tradeUtils";
-import {formatDatesFromBackend} from "../utils/dateUtils";
-import LoadingSpinner from "../components/LoadingSpinner";
 import userStore from "../stores/userStore";
+import api from "../utils/api";
+import { formatDatesFromBackend } from "../utils/dateUtils";
+import { CashflowDTO, Trade, TradeLeg } from "../utils/tradeTypes";
+import { convertEmptyStringsToNull, formatTradeForBackend, getDefaultTrade, validateTrade } from "../utils/tradeUtils";
+import CashflowModal from "./CashflowModal";
 
 /**
  * Props for SingleTradeModal component
@@ -25,7 +24,7 @@ interface SingleTradeModalProps {
 /**
  * Modal component for viewing, editing and managing a single trade
  */
-export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
+const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
     const [editableTrade, setEditableTrade] = React.useState<Trade | undefined>(props.trade ?? getDefaultTrade());
     const [cashflowModalOpen, setCashflowModalOpen] = React.useState(false);
     const [generatedCashflows, setGeneratedCashflows] = React.useState<CashflowDTO[]>([]);
@@ -133,7 +132,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
 
         let tradeDto = formatTradeForBackend(editableTrade);
         // Convert empty strings for numeric/date fields to null before sending to backend
-        tradeDto = convertEmptyStringsToNull(tradeDto);
+        tradeDto = convertEmptyStringsToNull(tradeDto) as Record<string, unknown>;
 
         try {
             if (editableTrade.tradeId) {
@@ -145,7 +144,7 @@ export const SingleTradeModal: React.FC<SingleTradeModalProps> = (props) => {
 
 
                 const response = await api.get(`/trades/${editableTrade.tradeId}`);
-                const updatedTrade = formatDatesFromBackend(response.data);
+                const updatedTrade = formatDatesFromBackend(response.data) as Trade;
                 setEditableTrade(updatedTrade);
             } else {
                 // Save new trade

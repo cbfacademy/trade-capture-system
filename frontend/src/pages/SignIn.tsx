@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-// @ts-expect-error - avatar might not be found
-import avatar from '../assets/avatar.svg'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar.svg';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import {authenticate,getUserByLogin} from "../utils/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 import userStore from "../stores/userStore";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { authenticate, getUserByLogin } from "../utils/api";
 import SignUp from './SignUp';
 
 const SignIn = () => {

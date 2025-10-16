@@ -1,19 +1,18 @@
-import React, {useState} from "react";
-import AGGridTable from "./../components/AGGridTable";
-import {AllCommunityModule, ModuleRegistry, SelectionChangedEvent} from 'ag-grid-community';
-import {fetchAllUsers} from "../utils/api";
-import Snackbar from "./../components/Snackbar";
-import LoadingSpinner from "./../components/LoadingSpinner";
-import Button from "./../components/Button";
-import {getColDefFromResult, getRowDataFromData} from "../utils/agGridUtils";
+import { AllCommunityModule, ModuleRegistry, SelectionChangedEvent } from 'ag-grid-community';
 import axios from "axios";
-import {observer} from "mobx-react-lite";
-import {ApplicationUser} from "../utils/ApplicationUser";
+import { observer } from "mobx-react-lite";
+import React, { useState } from "react";
+import { getColDefFromResult, getRowDataFromData } from "../utils/agGridUtils";
+import { fetchAllUsers } from "../utils/api";
+import { ApplicationUser } from "../utils/ApplicationUser";
+import AGGridTable from "./../components/AGGridTable";
+import Button from "./../components/Button";
+import LoadingSpinner from "./../components/LoadingSpinner";
+import Snackbar from "./../components/Snackbar";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-
-export const AllUserView: React.FC = observer(() => {
+const AllUserView: React.FC = observer(() => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMsg, setSnackbarMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);

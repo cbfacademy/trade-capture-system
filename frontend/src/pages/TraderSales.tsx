@@ -1,9 +1,9 @@
 import React from 'react';
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";
-import {HomeContent} from "../components/HomeContent";
-import {TradeBlotterModal} from "../modal/TradeBlotterModal";
-import {TradeActionsModal} from "../modal/TradeActionsModal";
+import TradeActionsModal from "../modal/TradeActionsModal";
+import TradeBlotterModal from "../modal/TradeBlotterModal";
 
 const TraderSales = () => {
     const [searchParams] = useSearchParams();

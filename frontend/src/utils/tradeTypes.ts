@@ -41,13 +41,3 @@ export interface CashflowDTO {
   paymentBusinessDayConvention?: string;
   rate?: number | string;
 }
-
-export interface CashflowGenerationLegDTO {
-  legType: string;
-  notional: number;
-  rate?: number;
-  index?: string;
-  calculationPeriodSchedule?: string;
-  paymentBusinessDayConvention?: string;
-  payReceiveFlag?: string;
-}

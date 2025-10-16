@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useLocation, useSearchParams} from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Button from './Button';
 
 const navItems = [
@@ -14,7 +14,7 @@ const navItems = [
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
 
     const handleSideBarClick = (param: string) => {
         setSearchParams({view: param});

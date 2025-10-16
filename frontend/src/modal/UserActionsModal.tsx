@@ -1,17 +1,17 @@
+import { useQuery } from '@tanstack/react-query';
+import { observer } from "mobx-react-lite";
 import React from "react";
-import Input from "../components/Input";
 import Button from "../components/Button";
-import api, {createUser} from "../utils/api";
+import Input from "../components/Input";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
-import {observer} from "mobx-react-lite";
-import {useQuery} from '@tanstack/react-query';
 import staticStore from "../stores/staticStore";
-import {SingleUserModal} from "./SingleUserModal";
-import {ApplicationUser} from "../utils/ApplicationUser";
+import api, { createUser } from "../utils/api";
+import { ApplicationUser } from "../utils/ApplicationUser";
+import SingleUserModal from "./SingleUserModal";
 
 
-function getDefaultUser(): Partial<ApplicationUser> {
+function getDefaultUser(): ApplicationUser {
     return {
         id: 0,
         firstName: "",
@@ -19,7 +19,9 @@ function getDefaultUser(): Partial<ApplicationUser> {
         loginId: "",
         password: "",
         active: false,
-        userProfile: ""
+        userProfile: "",
+        version: 0,
+        lastModifiedTimestamp: new Date().toISOString()
     };
 }
 
@@ -28,7 +30,7 @@ interface UserActionsModalProps {
     setView?: (view: string, user?: ApplicationUser) => void;
 }
 
-export const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ user: initialUser, setView }) => {
+const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ user: initialUser, setView }) => {
     const [userId, setUserId] = React.useState<string>("");
     const [snackBarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [snackBarType, setSnackbarType] = React.useState<'success' | 'error'>("success");
@@ -90,11 +92,7 @@ export const UserActionsModal: React.FC<UserActionsModalProps> = observer(({ use
         try {
 
             const { id, firstName, lastName, loginId, password, active, userProfile } = user || {};
-            let userProfileValue = userProfile;
-
-            if (userProfileValue && typeof userProfileValue === 'object') {
-                userProfileValue = userProfileValue.value || userProfileValue.label || "";
-            }
+            const userProfileValue = userProfile;
             const userPayload = {
                 id: id ?? null,
                 firstName: firstName ?? "",

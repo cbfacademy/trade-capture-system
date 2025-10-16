@@ -1,11 +1,11 @@
+import { observer } from "mobx-react-lite";
 import React, { useState } from 'react';
+import { useSearchParams } from "react-router-dom";
+import { HomeContent } from "../components/HomeContent";
 import Layout from '../components/Layout';
-import {useSearchParams} from "react-router-dom";
-import {HomeContent} from "../components/HomeContent";
-import {observer} from "mobx-react-lite";
 import AllUserView from '../modal/AllUserView';
 import UserActionsModal from '../modal/UserActionsModal';
-import {ApplicationUser} from "../utils/ApplicationUser";
+import { ApplicationUser } from "../utils/ApplicationUser";
 
 const Main: React.FC = observer(() => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +24,7 @@ const Main: React.FC = observer(() => {
                 <AllUserView />
             )}
             {view === 'user-actions' && (
-                <UserActionsModal user={selectedUser} setView={handleSetView} />
+                <UserActionsModal user={selectedUser || undefined} setView={handleSetView} />
             )}
         </Layout>
     );

@@ -1,9 +1,9 @@
 import React from 'react';
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { HomeContent } from "../components/HomeContent";
 import Layout from "../components/Layout";
-import {HomeContent} from "../components/HomeContent";
-import {AllUserView} from "../modal/AllUserView";
-import {UserActionsModal} from "../modal/UserActionsModal";
+import AllUserView from "../modal/AllUserView";
+import UserActionsModal from "../modal/UserActionsModal";
 
 const Admin: React.FC = () => {
     const [searchParams] = useSearchParams();

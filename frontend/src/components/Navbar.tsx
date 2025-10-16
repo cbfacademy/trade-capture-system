@@ -1,9 +1,8 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
-//@ts-expect-error - Logo might not be found
-import logo from '../assets/trading-logo.svg'
-import Button from './Button';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/trading-logo.svg';
 import userStore from "../stores/userStore";
+import Button from './Button';
 
 const navItems = [
     {label: 'Home', aria: 'home', path: '/home', profile: ['default', 'TRADER_SALES', 'MO', 'SUPPORT', 'ADMIN', 'SUPER_USER']},

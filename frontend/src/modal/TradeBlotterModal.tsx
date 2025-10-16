@@ -1,13 +1,13 @@
-import React from "react";
-import {observer} from "mobx-react-lite";
-import AGGridTable from "../components/AGGridTable";
-import {fetchTrades} from "../utils/api";
-import {getColDefFromResult, getRowDataFromData} from "../utils/agGridUtils";
 import { useQuery } from '@tanstack/react-query';
-import {Trade} from "../utils/tradeTypes";
+import { observer } from "mobx-react-lite";
+import React from "react";
+import AGGridTable from "../components/AGGridTable";
+import { getColDefFromResult, getRowDataFromData } from "../utils/agGridUtils";
+import { fetchTrades } from "../utils/api";
+import { Trade } from "../utils/tradeTypes";
 
 
-export const TradeBlotterModal: React.FC = observer(() => {
+const TradeBlotterModal: React.FC = observer(() => {
     const [trades, setTrades] = React.useState<Trade[]>([]);
 
     const {data, isSuccess} = useQuery({
@@ -39,4 +39,6 @@ export const TradeBlotterModal: React.FC = observer(() => {
             </div>
         </div>
     )
-})
+});
+
+export default TradeBlotterModal;

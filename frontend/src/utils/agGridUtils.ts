@@ -1,4 +1,14 @@
-export function getColDefFromResult(data: unknown): unknown[] {
+interface ColDef {
+    headerName: string;
+    field: string;
+    sortable: boolean;
+    filter: boolean;
+    cellRenderer?: string;
+    cellRendererParams?: { tristate: boolean };
+    width?: number;
+}
+
+export function getColDefFromResult(data: unknown): ColDef[] {
     if (!data) return [];
     const sample = Array.isArray(data) ? data[0] : data;
     if (!sample) return [];
@@ -24,7 +34,7 @@ export function getColDefFromResult(data: unknown): unknown[] {
 }
 
 
-export function getRowDataFromData(data: unknown): unknown[] {
+export function getRowDataFromData(data: unknown): Record<string, unknown>[] {
     if (!data) return [];
     const arr = Array.isArray(data) ? data : typeof data === 'object' ? [data] : [];
     return arr.map((row: Record<string, unknown>) => {

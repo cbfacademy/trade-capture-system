@@ -69,7 +69,7 @@ export const formatDatesFromBackend = (trade: TradeData): TradeData => {
     if (trade.validityStartDate && trade.validityStartDate.includes('T')) {
         trade.validityStartDate = trade.validityStartDate.split('T')[0];
     }
-    if (trade.validityEndDate && trade.validityEndDate.includes('T')) {
+    if (trade.validityEndDate && typeof trade.validityEndDate === 'string' && trade.validityEndDate.includes('T')) {
         trade.validityEndDate = trade.validityEndDate.split('T')[0];
     }
     return trade;

@@ -1,11 +1,11 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
-import {observer} from "mobx-react-lite";
 import Button from "../components/Button";
-import Label from "../components/Label";
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
+import Label from "../components/Label";
 import staticStore from "../stores/staticStore";
-import {ApplicationUser} from "../utils/ApplicationUser";
+import { ApplicationUser } from "../utils/ApplicationUser";
 
 interface UserDetailModalProps {
     isOpen: boolean;
@@ -30,7 +30,7 @@ const USER_FIELDS = [
     },
 ];
 
-export const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) => {
+const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) => {
     const {user, setUser} = props;
     if (!user) return null;
 
@@ -57,7 +57,7 @@ export const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) 
                                 <Label className="w-1/3 text-right pr-2">{field.label}</Label>
                                 <Input
                                     type={field.key === "password" ? "password" : "text"}
-                                    value={user[field.key as keyof ApplicationUser] ?? ""}
+                                    value={String(user[field.key as keyof ApplicationUser] ?? "")}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange(field.key as keyof ApplicationUser, e.target.value)}
                                     className="w-2/3 bg-white"
                                 />
@@ -83,8 +83,7 @@ export const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) 
                             <div key={field.key} className="w-full flex flex-row items-center gap-2">
                                 <Label className="w-1/3 text-right pr-2">{field.label}</Label>
                                 <Dropdown
-                                    label=""
-                                    value={user[field.key as keyof ApplicationUser] ?? ""}
+                                    value={String(user[field.key as keyof ApplicationUser] ?? "")}
                                     options={options}
                                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFieldChange(field.key as keyof ApplicationUser, e.target.value)}
                                     className="min-w=[150px] h-fit bg-white"
@@ -102,3 +101,5 @@ export const SingleUserModal: React.FC<UserDetailModalProps> = observer((props) 
         </div>
     );
 });
+
+export default SingleUserModal;

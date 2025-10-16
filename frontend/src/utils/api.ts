@@ -20,8 +20,6 @@ export const createUser = (user: object) => api.post('/users', user);
 
 export const fetchUserProfiles = () => api.get('/userProfiles');
 
-export const updateUser = (id: string | number, user: object) => api.put(`/users/${id}`, user);
-
 export const authenticate = (user: string, pass: string) => {
   return api.post(`/login/${user}`, null, {
     params: {

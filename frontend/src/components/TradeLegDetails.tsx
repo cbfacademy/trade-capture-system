@@ -1,13 +1,13 @@
 import React from "react";
-import Label from "./Label";
-import FieldRenderer from "./FieldRenderer";
+import { DISABLED_LEG_FIELDS, FIXED_FIELDS, FLOATING_FIELDS, TRADE_LEG_FIELDS } from "../utils/tradeFormFields";
 import { TradeLeg } from "../utils/tradeTypes";
-import { TRADE_LEG_FIELDS, DISABLED_LEG_FIELDS, FLOATING_FIELDS, FIXED_FIELDS } from "../utils/tradeFormFields";
+import FieldRenderer from "./FieldRenderer";
+import Label from "./Label";
 
 /**
  * Props for the TradeLegDetails component
  */
-export interface TradeLegDetailsProps {
+interface TradeLegDetailsProps {
     leg: TradeLeg;
     mode: "view" | "edit";
     onFieldChange?: (key: keyof TradeLeg, value: unknown) => void;

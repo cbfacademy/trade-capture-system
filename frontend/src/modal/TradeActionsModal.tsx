@@ -1,18 +1,18 @@
+import { useQuery } from '@tanstack/react-query';
+import { observer } from "mobx-react-lite";
 import React from "react";
-import Input from "../components/Input";
 import Button from "../components/Button";
-import api from "../utils/api";
-import { SingleTradeModal} from "./SingleTradeModal";
-import { getDefaultTrade } from "../utils/tradeUtils";
-import userStore from "../stores/userStore";
+import Input from "../components/Input";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
-import {observer} from "mobx-react-lite";
-import {useQuery} from '@tanstack/react-query';
 import staticStore from "../stores/staticStore";
-import {Trade, TradeLeg} from "../utils/tradeTypes";
+import userStore from "../stores/userStore";
+import api from "../utils/api";
+import { Trade, TradeLeg } from "../utils/tradeTypes";
+import { getDefaultTrade } from "../utils/tradeUtils";
+import SingleTradeModal from "./SingleTradeModal";
 
-export const TradeActionsModal: React.FC = observer(() => {
+const TradeActionsModal: React.FC = observer(() => {
     const [tradeId, setTradeId] = React.useState<string>("");
     const [snackBarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [trade, setTrade] = React.useState<Trade | null>(null);
@@ -147,4 +147,6 @@ export const TradeActionsModal: React.FC = observer(() => {
                       type={isLoadError ? "error" : "success"}/>
         </div>
     )
-})
+});
+
+export default TradeActionsModal;

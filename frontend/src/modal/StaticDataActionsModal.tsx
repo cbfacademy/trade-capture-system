@@ -1,10 +1,10 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
-import {observer} from "mobx-react-lite";
 import Button from "../components/Button";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 
-export const StaticDataActionsModal: React.FC = observer(() => {
+const StaticDataActionsModal: React.FC = observer(() => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState<string>("");
@@ -90,4 +90,6 @@ export const StaticDataActionsModal: React.FC = observer(() => {
             />
         </div>
     )
-})
+});
+
+export default StaticDataActionsModal;

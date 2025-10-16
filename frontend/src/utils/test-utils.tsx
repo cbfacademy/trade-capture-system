@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, RenderOptions } from '@testing-library/react';
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 // Create a fresh QueryClient for each test
 const createTestQueryClient = () => new QueryClient({
@@ -11,32 +11,6 @@ const createTestQueryClient = () => new QueryClient({
     },
   },
 });
-
-// Custom render function with common providers
-export function renderWithProviders(
-  ui: React.ReactElement,
-  {
-    initialRoute = '/',
-    path = '/',
-    ...renderOptions
-  }: RenderOptions & { initialRoute?: string, path?: string } = {}
-) {
-  const queryClient = createTestQueryClient();
-
-  function Wrapper({ children }: { children: React.ReactNode }) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={[initialRoute]}>
-          <Routes>
-            <Route path={path} element={children} />
-          </Routes>
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-  }
-
-  return render(ui, { wrapper: Wrapper, ...renderOptions });
-}
 
 // Use this wrapper when you need just a basic router without routes
 export function renderWithRouter(
