@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderWithRouter } from '../utils/test-utils';
+import { renderWithRouter } from '../utils/testUtils';
 import Sidebar from './Sidebar';
 
 describe('Sidebar Component', () => {
