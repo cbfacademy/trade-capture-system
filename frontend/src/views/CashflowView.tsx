@@ -1,15 +1,15 @@
 import { Dialog } from "@headlessui/react";
 import React from "react";
 import AGGridTable from "../components/AGGridTable";
-import { CashflowDTO } from "../utils/tradeTypes";
+import { CashflowDTO } from "../types/trade";
 
-interface CashflowModalProps {
+interface CashflowViewProps {
   isOpen: boolean;
   onClose: () => void;
   cashflows: CashflowDTO[];
 }
 
-const CashflowModal: React.FC<CashflowModalProps> = ({ isOpen, onClose, cashflows }) => {
+const CashflowView: React.FC<CashflowViewProps> = ({ isOpen, onClose, cashflows }) => {
 
   const leg1Cashflows = cashflows.filter(
     cf => cf.payRec?.toLowerCase() === 'pay' && cf.paymentType?.toLowerCase() === 'fixed'
@@ -61,4 +61,4 @@ const CashflowModal: React.FC<CashflowModalProps> = ({ isOpen, onClose, cashflow
   );
 };
 
-export default CashflowModal;
+export default CashflowView;

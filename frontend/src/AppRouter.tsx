@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import PrivateRoute from "./components/PrivateRoute";
 import Admin from "./pages/Admin";
 import Main from './pages/Main';
 import MiddleOffice from "./pages/MiddleOffice";
 import SignIn from './pages/SignIn';
 import Support from "./pages/Support";
 import TraderSales from "./pages/TraderSales";
-import PrivateRoute from "./PrivateRoute";
 import userStore from './stores/userStore';
 
 const AppRouter = observer(() => (

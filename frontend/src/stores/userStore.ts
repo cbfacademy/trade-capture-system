@@ -1,5 +1,5 @@
-import {makeAutoObservable} from 'mobx';
-import {ApplicationUser} from "../utils/ApplicationUser";
+import { makeAutoObservable } from 'mobx';
+import { ApplicationUser } from "../types/user";
 
 class UserStore {
     private _user: ApplicationUser | null = null;

@@ -1,5 +1,5 @@
-import {Trade} from "./tradeTypes";
-import {formatDateForBackend, getOneYearFromToday, getToday} from "./dateUtils";
+import { Trade } from "../types/trade";
+import { formatDateForBackend, getOneYearFromToday, getToday } from "./dateUtils";
 
 /**
  * Creates a default trade object with basic values

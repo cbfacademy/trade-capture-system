@@ -7,12 +7,12 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import Snackbar from "../components/Snackbar";
 import staticStore from "../stores/staticStore";
 import userStore from "../stores/userStore";
+import { Trade, TradeLeg } from "../types/trade";
 import api from "../utils/api";
-import { Trade, TradeLeg } from "../utils/tradeTypes";
 import { getDefaultTrade } from "../utils/tradeUtils";
-import SingleTradeModal from "./SingleTradeModal";
+import SingleTradeView from "./SingleTradeView";
 
-const TradeActionsModal: React.FC = observer(() => {
+const TradeActionsView: React.FC = observer(() => {
     const [tradeId, setTradeId] = React.useState<string>("");
     const [snackBarOpen, setSnackbarOpen] = React.useState<boolean>(false);
     const [trade, setTrade] = React.useState<Trade | null>(null);
@@ -141,7 +141,7 @@ const TradeActionsModal: React.FC = observer(() => {
             </div>
             <div>
                 {loading ? <LoadingSpinner/> : null}
-                {trade && !loading && <SingleTradeModal key={modalKey} mode={mode} trade={trade} isOpen={!!trade} onClear={handleClearAll}/>}
+                {trade && !loading && <SingleTradeView key={modalKey} mode={mode} trade={trade} isOpen={!!trade} onClear={handleClearAll}/>}
             </div>
             <Snackbar open={snackBarOpen} message={snackbarMessage} onClose={() => setSnackbarOpen(false)}
                       type={isLoadError ? "error" : "success"}/>
@@ -149,4 +149,4 @@ const TradeActionsModal: React.FC = observer(() => {
     )
 });
 
-export default TradeActionsModal;
+export default TradeActionsView;
