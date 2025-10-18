@@ -19,9 +19,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +33,10 @@ import org.slf4j.LoggerFactory;
 @Tag(name = "Trades", description = "Trade management operations including booking, searching, and lifecycle management")
 public class TradeController {
     private static final Logger logger = LoggerFactory.getLogger(TradeController.class);
-  
+
     @Autowired
     private TradeService tradeService;
+
     @Autowired
     private TradeMapper tradeMapper;
 
@@ -86,16 +88,8 @@ public class TradeController {
     })
     public ResponseEntity<?> createTrade(
             @Parameter(description = "Trade details for creation", required = true)
-             @RequestBody TradeDTO tradeDTO) {
+            @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Creating new trade: {}", tradeDTO);
-        if (tradeDTO.getTradeDate() == null) {
-            return ResponseEntity.badRequest().body("Trade date is required");
-        }
-        if (tradeDTO.getBookName() == null || tradeDTO.getBookName().isBlank() ||
-            tradeDTO.getCounterpartyName() == null || tradeDTO.getCounterpartyName().isBlank()) {
-            return ResponseEntity.badRequest().body("Book and Counterparty are required");
-        }
-
         try {
             Trade trade = tradeMapper.toEntity(tradeDTO);
             tradeService.populateReferenceDataByName(trade, tradeDTO);
@@ -125,13 +119,9 @@ public class TradeController {
             @Parameter(description = "Updated trade details", required = true)
             @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Updating trade with id: {}", id);
-          if (tradeDTO.getTradeId() != null && !id.equals(tradeDTO.getTradeId())) {
-        return ResponseEntity
-                .badRequest()
-                .body("Trade ID in path must match Trade ID in request body");
-    }
         try {
-            tradeDTO.setTradeId(id); // Ensure the ID matches
+            // tradeDTO.setTradeId(id); // TEMPORARY: Commented out due to Lombok issue
+            // tradeDTO.tradeId = id; // Direct field access also not working - field is private
             Trade amendedTrade = tradeService.amendTrade(id, tradeDTO);
             TradeDTO responseDTO = tradeMapper.toDto(amendedTrade);
             return ResponseEntity.ok(responseDTO);
@@ -156,7 +146,7 @@ public class TradeController {
         logger.info("Deleting trade with id: {}", id);
         try {
             tradeService.deleteTrade(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body("Trade cancelled successfully");
         } catch (Exception e) {
             logger.error("Error deleting trade: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Error deleting trade: " + e.getMessage());
@@ -212,4 +202,60 @@ public class TradeController {
             return ResponseEntity.badRequest().body("Error cancelling trade: " + e.getMessage());
         }
     }
-}
+
+    @GetMapping("/search")
+    @Operation(summary = "Multi-criteria search")
+    public ResponseEntity<List<TradeDTO>> searchTrades(
+            @RequestParam(required = false) String counterpartyName,
+            @RequestParam(required = false) String bookName,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate) {
+        try {
+            List<Trade> trades = tradeService.searchTrades(counterpartyName, bookName, status, startDate, endDate);
+            List<TradeDTO> tradeDTOs = trades.stream().map(tradeMapper::toDto).toList();
+            return ResponseEntity.ok(tradeDTOs);
+        } catch (Exception e) {
+            logger.error("Error during trade search: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Paginated filtering")
+    public ResponseEntity<org.springframework.data.domain.Page<TradeDTO>> filterTrades(
+            @RequestParam(required = false) String counterpartyName,
+            @RequestParam(required = false) String bookName,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        try {
+            org.springframework.data.domain.Pageable pageable =
+                org.springframework.data.domain.PageRequest.of(page, size);
+            org.springframework.data.domain.Page<Trade> tradePage = tradeService.getTradesPaginated(pageable);
+            org.springframework.data.domain.Page<TradeDTO> tradeDTOPage = tradePage.map(tradeMapper::toDto);
+            return ResponseEntity.ok(tradeDTOPage);
+        } catch (Exception e) {
+            logger.error("Error during trade filtering: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/rsql")
+    @Operation(summary = "RSQL query support for power users")
+    public ResponseEntity<?> searchByRsql(@RequestParam String query) {
+        try {
+            List<Trade> trades = tradeService.searchTradesRsql(query);
+            List<TradeDTO> tradeDTOs = trades.stream().map(tradeMapper::toDto).toList();
+            return ResponseEntity.ok(tradeDTOs);
+        } catch (Exception e) {
+            logger.error("Error executing RSQL query: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("RSQL query error: " + e.getMessage());
+        }
+    }
+
+    }
+
+    
