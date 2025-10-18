@@ -215,7 +215,6 @@ class TradeServiceTest {
         assertTrue(exception.getMessage().contains("Trade not found"));
     }
 
-    // Fixed test for cashflow generation logic
     @Test
     void testCashflowGeneration_MonthlySchedule() {
         // This test validates cashflow generation behavior

@@ -157,7 +157,9 @@ public class TradeControllerTest {
         mockMvc.perform(post("/api/trades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDTO)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[?(@.field=='tradeDate')]").exists());
+                
 
         verify(tradeService, never()).saveTrade(any(Trade.class), any(TradeDTO.class));
     }
