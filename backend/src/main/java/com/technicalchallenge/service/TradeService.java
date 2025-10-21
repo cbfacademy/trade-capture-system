@@ -69,7 +69,7 @@ public class TradeService {
 
     @Transactional
     public Trade createTrade(TradeDTO tradeDTO) {
-            logger.info("Creating new trade with ID: {}", tradeDTO.getTradeId());
+        logger.info("Creating new trade with ID: {}", tradeDTO.getTradeId());
 
         // Generate trade ID if not provided
         if (tradeDTO.getTradeId() == null) {
@@ -104,6 +104,7 @@ public class TradeService {
 
         // Create trade legs and cashflows
         createTradeLegsWithCashflows(tradeDTO, savedTrade);
+
 
         logger.info("Successfully created trade with ID: {}", savedTrade.getTradeId());
         return savedTrade;
@@ -294,6 +295,7 @@ public class TradeService {
         // Create new trade legs and cashflows
         createTradeLegsWithCashflows(tradeDTO, savedTrade);
 
+
         logger.info("Successfully amended trade with ID: {}", savedTrade.getTradeId());
         return savedTrade;
     }
@@ -373,7 +375,6 @@ public class TradeService {
             var legDTO = tradeDTO.getTradeLegs().get(i);
 
             TradeLeg tradeLeg = new TradeLeg();
-            tradeLeg.setLegId(legDTO.getLegId());
             tradeLeg.setTrade(savedTrade);
             tradeLeg.setNotional(legDTO.getNotional());
             tradeLeg.setRate(legDTO.getRate());
@@ -469,7 +470,7 @@ public class TradeService {
     /**
      * FIXED: Generate cashflows based on schedule and maturity date
      */
-    private void generateCashflows(TradeLeg leg, LocalDate startDate, LocalDate maturityDate) {
+    void generateCashflows(TradeLeg leg, LocalDate startDate, LocalDate maturityDate) {
         logger.info("Generating cashflows for leg {} from {} to {}", leg.getLegId(), startDate, maturityDate);
 
         // Use default schedule if not set
@@ -555,13 +556,23 @@ public class TradeService {
         String legType = leg.getLegRateType().getType();
 
         if ("Fixed".equals(legType)) {
-            double notional = leg.getNotional().doubleValue();
-            double rate = leg.getRate();
-            double months = monthsInterval;
+            // FIXED: Use BigDecimal for precise monetary calculations
+            BigDecimal notional = leg.getNotional();
+            
+            // FIXED: Convert percentage rate to decimal (3.5% -> 0.035)
+            BigDecimal rate = BigDecimal.valueOf(leg.getRate()).divide(BigDecimal.valueOf(100));
+            
+            BigDecimal months = BigDecimal.valueOf(monthsInterval);
+            BigDecimal twelve = BigDecimal.valueOf(12);
 
-            double result = (notional * rate * months) / 12;
+            // FIXED: Precise calculation using BigDecimal arithmetic
+            // Formula: (notional * rate * months) / 12
+            BigDecimal result = notional
+                .multiply(rate)
+                .multiply(months)
+                .divide(twelve, 2, java.math.RoundingMode.HALF_UP);
 
-            return BigDecimal.valueOf(result);
+            return result;
         } else if ("Floating".equals(legType)) {
             return BigDecimal.ZERO;
         }
@@ -589,4 +600,156 @@ public class TradeService {
         // For simplicity, using a static variable. In real scenario, this should be atomic and thread-safe.
         return 10000L + tradeRepository.count();
     }
+
+    // Enhancement 1: Advanced Trade Search System (simplified implementation)
+
+    /**
+     * Search trades by counterparty name
+     */
+    public List<Trade> searchTradesByCounterparty(String counterpartyName) {
+        logger.info("Searching trades by counterparty: {}", counterpartyName);
+        return tradeRepository.findByCounterpartyNameContaining(counterpartyName);
+    }
+
+    /**
+     * Search trades by book name
+     */
+    public List<Trade> searchTradesByBook(String bookName) {
+        logger.info("Searching trades by book: {}", bookName);
+        return tradeRepository.findByBookNameContaining(bookName);
+    }
+
+    /**
+     * Search trades by status
+     */
+    public List<Trade> searchTradesByStatus(String status) {
+        logger.info("Searching trades by status: {}", status);
+        return tradeRepository.findByTradeStatus(status);
+    }
+
+    /**
+     * Search trades by date range
+     */
+    public List<Trade> searchTradesByDateRange(LocalDate startDate, LocalDate endDate) {
+        logger.info("Searching trades from {} to {}", startDate, endDate);
+        return tradeRepository.findByTradeDateBetween(startDate, endDate);
+    }
+
+    /**
+     * Get trades for a specific trader (for dashboard)
+     */
+    public List<Trade> getTradesByTrader(Long userId) {
+        logger.info("Retrieving trades for trader user ID: {}", userId);
+        return tradeRepository.findByTraderUserId(userId);
+    }
+
+    /**
+     * Get paginated trades
+     */
+    public org.springframework.data.domain.Page<Trade> getTradesPaginated(org.springframework.data.domain.Pageable pageable) {
+        logger.info("Retrieving paginated trades");
+        return tradeRepository.findAllActivePaginated(pageable);
+    }
+
+    /**
+     * Multi-criteria search (combining individual searches)
+     */
+    public List<Trade> searchTrades(String counterpartyName, String bookName, String status,
+                                   LocalDate startDate, LocalDate endDate) {
+        logger.info("Multi-criteria search - counterparty: {}, book: {}, status: {}, dates: {} to {}",
+                   counterpartyName, bookName, status, startDate, endDate);
+        
+        // Start with all active trades
+        List<Trade> results = getAllTrades();
+        
+        // Apply filters sequentially
+        if (counterpartyName != null && !counterpartyName.trim().isEmpty()) {
+            results = results.stream()
+                .filter(t -> t.getCounterparty() != null &&
+                           t.getCounterparty().getName().toLowerCase().contains(counterpartyName.toLowerCase()))
+                .toList();
+        }
+        
+        if (bookName != null && !bookName.trim().isEmpty()) {
+            results = results.stream()
+                .filter(t -> t.getBook() != null &&
+                           t.getBook().getBookName().toLowerCase().contains(bookName.toLowerCase()))
+                .toList();
+        }
+        
+        if (status != null && !status.trim().isEmpty()) {
+            results = results.stream()
+                .filter(t -> t.getTradeStatus() != null &&
+                           t.getTradeStatus().getTradeStatus().toLowerCase().contains(status.toLowerCase()))
+                .toList();
+        }
+        
+        if (startDate != null) {
+            results = results.stream()
+                .filter(t -> t.getTradeDate() != null && !t.getTradeDate().isBefore(startDate))
+                .toList();
+        }
+        
+        if (endDate != null) {
+            results = results.stream()
+                .filter(t -> t.getTradeDate() != null && !t.getTradeDate().isAfter(endDate))
+                .toList();
+        }
+        
+        return results;
+    }
+
+    /**
+     * Simple RSQL-style query support
+     */
+
+     private String extractSimpleValue(String query, String key) {
+        int startIndex = query.indexOf(key) + key.length();
+        int endIndex = startIndex;
+        
+        // Find end of value (semicolon, comma, or end of string)
+        while (endIndex < query.length() &&
+               query.charAt(endIndex) != ';' &&
+               query.charAt(endIndex) != ',' &&
+               query.charAt(endIndex) != ')') {
+            endIndex++;
+        }
+        
+        return query.substring(startIndex, endIndex).trim();
+    }
+    
+    public List<Trade> searchTradesRsql(String query) {
+        logger.info("RSQL query search: {}", query);
+        
+        // Simple implementation for common RSQL patterns
+        try {
+            if (query.contains("counterparty.name==")) {
+                String counterpartyName = extractSimpleValue(query, "counterparty.name==");
+                return searchTradesByCounterparty(counterpartyName);
+            }
+            
+            if (query.contains("tradeStatus.tradeStatus==")) {
+                String status = extractSimpleValue(query, "tradeStatus.tradeStatus==");
+                return searchTradesByStatus(status);
+            }
+            
+            if (query.contains("tradeDate=ge=") && query.contains("tradeDate=le=")) {
+                String startDateStr = extractSimpleValue(query, "tradeDate=ge=");
+                String endDateStr = extractSimpleValue(query, "tradeDate=le=");
+                LocalDate startDate = LocalDate.parse(startDateStr);
+                LocalDate endDate = LocalDate.parse(endDateStr);
+                return searchTradesByDateRange(startDate, endDate);
+            }
+            
+            // If no specific pattern matches, return all trades
+            return getAllTrades();
+            
+        } catch (Exception e) {
+            logger.error("Error parsing RSQL query: {}", query, e);
+            throw new RuntimeException("Invalid RSQL query format: " + e.getMessage());
+        }
+    }
+    
+    
+
 }
