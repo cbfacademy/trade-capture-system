@@ -183,7 +183,7 @@ public class TradeControllerTest {
         // Given
         Long tradeId = 1001L;
         tradeDTO.setTradeId(tradeId);
-        when(tradeService.saveTrade(any(Trade.class), any(TradeDTO.class))).thenReturn(trade);
+        when(tradeService.amendTrade(any(Long.class), any(TradeDTO.class))).thenReturn(trade);
         doNothing().when(tradeService).populateReferenceDataByName(any(Trade.class), any(TradeDTO.class));
 
         // When/Then
@@ -193,7 +193,7 @@ public class TradeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tradeId", is(1001)));
 
-        verify(tradeService).saveTrade(any(Trade.class), any(TradeDTO.class));
+        verify(tradeService).amendTrade(any(Long.class), any(TradeDTO.class));
     }
 
     @Test
