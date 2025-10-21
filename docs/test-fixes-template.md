@@ -283,3 +283,14 @@ Client (Trader UI)
         v
    Database (Trades)
 
+fix(test): TradeValidationServiceTest - Enhance trade creation and amendment tests
+
+- Problem: Existing tests did not cover all business rules such as cross-leg maturity date consistency, pay/receive flag validation, user privilege enforcement, and entity status checks. Some tests failed when trades violated these rules or when duplicate trade IDs were created.
+- Root Cause: Validation methods were partially implemented or missing specific checks, and the test suite did not mock all repository conditions required for comprehensive validations.
+- Solution: Updated TradeValidationServiceTest to:
+    • Include tests for invalid maturity dates across legs
+    • Validate opposite pay/receive flags for multi-leg trades
+    • Ensure user cannot perform unauthorized operations
+    • Mock entity repository responses for active/inactive status
+    • Test duplicate trade ID scenarios
+- Impact: Ensures TradeValidationService enforces all NSSAD CODDE business rules for trade creation and amendment, preventing invalid trades and supporting audit-ready validations.
