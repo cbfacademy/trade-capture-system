@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/trades")
@@ -47,6 +45,7 @@ public class TradeController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved all trades", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TradeDTO.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    // Should wrap in response entity for error handling
     public List<TradeDTO> getAllTrades() {
         logger.info("Fetching all trades");
         return tradeService.getAllTrades().stream()
@@ -72,17 +71,46 @@ public class TradeController {
 
     // Advanced Trade Search System
     @GetMapping("/search") // Multi-criteria search endpoint
-    public List<TradeDTO> searchTrades(
+    public ResponseEntity<List<TradeDTO>> searchTrades(
             @RequestParam(required = false) String counterparty,
             @RequestParam(required = false) String book,
             @RequestParam(required = false) String trader,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) LocalDate dateRange) {
-        return tradeService.searchTrades(counterparty, book, trader, status, dateRange).stream()
+        List<TradeDTO> results = tradeService.searchTrades(counterparty, book, trader, status, dateRange).stream()
+                .map(tradeMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(results);
+    }
+
+    // Apply pagination to filtered result set
+    @GetMapping("/filter")
+    public List<TradeDTO> filterTrades(
+            @RequestParam(required = false) String counterparty,
+            @RequestParam(required = false) String book,
+            @RequestParam(required = false) String trader,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate dateRange,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String direction) {
+        return tradeService.filterTrades(counterparty, book, trader, status, dateRange, page, size, sortBy, direction)
+                .stream()
                 .map(tradeMapper::toDto)
                 .toList();
     }
 
+    // Allow power users to search with RSQL
+    @GetMapping("/rsql")
+    public List<TradeDTO> searchByRqsl(
+            @RequestParam String query) {
+        return tradeService.searchByRqsl(query).stream()
+                .map(tradeMapper::toDto)
+                .toList();
+    }
+
+    // Updated mapping
     @PostMapping
     @Operation(summary = "Create new trade", description = "Creates a new trade with the provided details. Automatically generates cashflows and validates business rules.")
     @ApiResponses(value = {

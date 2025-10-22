@@ -6,14 +6,18 @@ import com.technicalchallenge.exceptions.TradeValidationException;
 import com.technicalchallenge.model.*;
 import com.technicalchallenge.repository.*;
 
+import io.github.perplexhub.rsql.RSQLJPASupport;
 import jakarta.persistence.criteria.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+
 
 @Service
 @Transactional
@@ -73,28 +79,28 @@ public class TradeService {
         return tradeRepository.findByTradeIdAndActiveTrue(tradeId);
     }
 
-     // Specification method for dynamic querying
+    // Specification method for dynamic querying
     private Specification<Trade> buildTradeSpecification(
-    String counterparty, String book, String trader, String status, LocalDate tradeDate) {
+            String counterparty, String book, String trader, String status, LocalDate tradeDate) {
 
-            return (root, query, cb) -> {
+        return (root, query, cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
             // Search criteria
             if (counterparty != null) {
-            predicates.add(cb.equal(root.get("counterparty").get("name"), counterparty));
+                predicates.add(cb.equal(root.get("counterparty").get("name"), counterparty));
             }
             if (book != null) {
-            predicates.add(cb.equal(root.get("book").get("bookName"), book));
+                predicates.add(cb.equal(root.get("book").get("bookName"), book));
             }
             if (trader != null) {
-            predicates.add(cb.equal(root.get("traderUser").get("loginId"), trader));
+                predicates.add(cb.equal(root.get("applicationUser").get("firstName"), trader));
             }
             if (status != null) {
-            predicates.add(cb.equal(root.get("tradeStatus").get("tradeStatus"), status));
+                predicates.add(cb.equal(root.get("tradeStatus").get("tradeStatus"), status));
             }
             if (tradeDate != null) {
-            predicates.add(cb.equal(root.get("tradeDate"), tradeDate));
+                predicates.add(cb.equal(root.get("tradeDate"), tradeDate));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
@@ -103,11 +109,20 @@ public class TradeService {
     }
 
     // Search database for trades matching specified criteria
-    public List<Trade> searchTrades(String counterparty, String book, String trader, String status, LocalDate tradeDate) {
+    public List<Trade> searchTrades(String counterparty, String book, String trader, String status,
+            LocalDate tradeDate) {
         logger.info("Retrieving trades matching specified criteria");
         Specification<Trade> spec = buildTradeSpecification(counterparty, book, trader, status, tradeDate);
         List<Trade> trades = tradeRepository.findAll(spec);
-        
+
+        return trades;
+    }
+
+    // Search database using RSQL
+    public List<Trade> searchByRqsl(String query){
+        Specification<Trade> spec = RSQLJPASupport.toSpecification(query);
+        List<Trade> trades = tradeRepository.findAll(spec);
+
         return trades;
     }
 
@@ -639,4 +654,15 @@ public class TradeService {
         // atomic and thread-safe.
         return 10000L + tradeRepository.count();
     }
+
+    // Apply pagination to results
+    public Page<Trade> filterTrades(
+            String counterparty, String book, String trader, String status, LocalDate tradeDate,
+            int page, int size, String sortBy, String direction) {
+        Specification<Trade> spec = buildTradeSpecification(counterparty, book, trader, status, tradeDate);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Trade> tradePage = tradeRepository.findAll(spec, pageable);
+        return tradePage;
+    }
+
 }
