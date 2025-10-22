@@ -20,10 +20,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/trades")
@@ -64,6 +68,19 @@ public class TradeController {
                 .map(tradeMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Advanced Trade Search System
+    @GetMapping("/search") // Multi-criteria search endpoint
+    public List<TradeDTO> searchTrades(
+            @RequestParam(required = false) String counterparty,
+            @RequestParam(required = false) String book,
+            @RequestParam(required = false) String trader,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate dateRange) {
+        return tradeService.searchTrades(counterparty, book, trader, status, dateRange).stream()
+                .map(tradeMapper::toDto)
+                .toList();
     }
 
     @PostMapping
@@ -112,7 +129,7 @@ public class TradeController {
             @Parameter(description = "Updated trade details", required = true) @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Updating trade with id: {}", id);
 
-       if (tradeDTO.getTradeId() == null || !tradeDTO.getTradeId().equals(id)) {
+        if (tradeDTO.getTradeId() == null || !tradeDTO.getTradeId().equals(id)) {
             return ResponseEntity.badRequest()
                     .body("Trade ID in path must match Trade ID in request body");
         }

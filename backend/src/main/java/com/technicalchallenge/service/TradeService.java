@@ -5,7 +5,11 @@ import com.technicalchallenge.dto.TradeLegDTO;
 import com.technicalchallenge.exceptions.TradeValidationException;
 import com.technicalchallenge.model.*;
 import com.technicalchallenge.repository.*;
+
+import jakarta.persistence.criteria.Predicate;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -17,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,6 +71,44 @@ public class TradeService {
     public Optional<Trade> getTradeById(Long tradeId) {
         logger.debug("Retrieving trade by id: {}", tradeId);
         return tradeRepository.findByTradeIdAndActiveTrue(tradeId);
+    }
+
+     // Specification method for dynamic querying
+    private Specification<Trade> buildTradeSpecification(
+    String counterparty, String book, String trader, String status, LocalDate tradeDate) {
+
+            return (root, query, cb) -> {
+
+            List<Predicate> predicates = new ArrayList<>();
+            // Search criteria
+            if (counterparty != null) {
+            predicates.add(cb.equal(root.get("counterparty").get("name"), counterparty));
+            }
+            if (book != null) {
+            predicates.add(cb.equal(root.get("book").get("bookName"), book));
+            }
+            if (trader != null) {
+            predicates.add(cb.equal(root.get("traderUser").get("loginId"), trader));
+            }
+            if (status != null) {
+            predicates.add(cb.equal(root.get("tradeStatus").get("tradeStatus"), status));
+            }
+            if (tradeDate != null) {
+            predicates.add(cb.equal(root.get("tradeDate"), tradeDate));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+
+        };
+    }
+
+    // Search database for trades matching specified criteria
+    public List<Trade> searchTrades(String counterparty, String book, String trader, String status, LocalDate tradeDate) {
+        logger.info("Retrieving trades matching specified criteria");
+        Specification<Trade> spec = buildTradeSpecification(counterparty, book, trader, status, tradeDate);
+        List<Trade> trades = tradeRepository.findAll(spec);
+        
+        return trades;
     }
 
     @Transactional
