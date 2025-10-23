@@ -98,7 +98,7 @@ class TradeServiceTest {
     @Test
     void testCreateTrade_InvalidDates_ShouldFail() {
         // Given - This test is intentionally failing for candidates to fix
-        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before trade date
+        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before tradeDate that is set in BeforeEach
 
         // When & Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -106,7 +106,7 @@ class TradeServiceTest {
         });
 
         // This assertion is intentionally wrong - candidates need to fix it
-        assertEquals("Wrong error message", exception.getMessage());
+        assertEquals("Start date cannot be before trade date", exception.getMessage());
     }
 
     @Test
