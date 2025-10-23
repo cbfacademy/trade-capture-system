@@ -368,7 +368,7 @@ public class TradeService {
         return trade;
     }
 
-    private void createTradeLegsWithCashflows(TradeDTO tradeDTO, Trade savedTrade) {
+    void createTradeLegsWithCashflows(TradeDTO tradeDTO, Trade savedTrade) {
         for (int i = 0; i < tradeDTO.getTradeLegs().size(); i++) {
             var legDTO = tradeDTO.getTradeLegs().get(i);
 
@@ -468,7 +468,7 @@ public class TradeService {
     /**
      * FIXED: Generate cashflows based on schedule and maturity date
      */
-    private void generateCashflows(TradeLeg leg, LocalDate startDate, LocalDate maturityDate) {
+    void generateCashflows(TradeLeg leg, LocalDate startDate, LocalDate maturityDate) {
         logger.info("Generating cashflows for leg {} from {} to {}", leg.getLegId(), startDate, maturityDate);
 
         // Use default schedule if not set

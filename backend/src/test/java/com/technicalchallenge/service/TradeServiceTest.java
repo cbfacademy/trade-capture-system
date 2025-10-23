@@ -2,15 +2,21 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.Cashflow;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
 import com.technicalchallenge.repository.CashflowRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
 import com.technicalchallenge.repository.TradeRepository;
 import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.model.Schedule;
+import com.technicalchallenge.repository.ScheduleRepository;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +27,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +47,9 @@ class TradeServiceTest {
 
     @Mock
     private AdditionalInfoService additionalInfoService;
+
+    @Mock
+    private ScheduleRepository scheduleRepository;
 
     @InjectMocks
     private TradeService tradeService;
@@ -141,7 +151,8 @@ class TradeServiceTest {
     void testAmendTrade_Success() {
         // Given
         when(tradeRepository.findByTradeIdAndActiveTrue(100001L)).thenReturn(Optional.of(trade));
-        when(tradeStatusRepository.findByTradeStatus("AMENDED")).thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
+        when(tradeStatusRepository.findByTradeStatus("AMENDED"))
+                .thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
 
         // When
@@ -168,16 +179,33 @@ class TradeServiceTest {
     // This test has a deliberate bug for candidates to find and fix
     @Test
     void testCashflowGeneration_MonthlySchedule() {
-        // This test method is incomplete and has logical errors
-        // Candidates need to implement proper cashflow testing
-
         // Given - setup is incomplete
-        TradeLeg leg = new TradeLeg();
-        leg.setNotional(BigDecimal.valueOf(1000000));
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(cashflowRepository.save(any(Cashflow.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When - method call is missing
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        schedule.setSchedule("1M");
 
-        // Then - assertions are wrong/missing
-        assertEquals(1, 12); // This will always fail - candidates need to fix
+        when(scheduleRepository.findBySchedule("MONTHLY"))
+                .thenReturn(Optional.of(schedule));
+
+        TradeLegDTO leg1 = tradeDTO.getTradeLegs().get(0);
+        leg1.setCalculationPeriodSchedule("MONTHLY");
+        leg1.setRate(0.05);
+
+        tradeDTO.setTradeLegs(Arrays.asList(leg1));
+
+        tradeService.createTradeLegsWithCashflows(tradeDTO, trade);
+
+        // Capture saved cashflows
+        ArgumentCaptor<Cashflow> captor = ArgumentCaptor.forClass(Cashflow.class);
+        verify(cashflowRepository, atLeastOnce()).save(captor.capture());
+
+        List<Cashflow> saved = captor.getAllValues();
+
+        assertEquals(12, saved.size());
     }
 }
