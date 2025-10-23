@@ -5,12 +5,19 @@ import com.technicalchallenge.dto.TradeLegDTO;
 import com.technicalchallenge.model.Cashflow;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.model.Book;
+import com.technicalchallenge.repository.BookRepository;
 import com.technicalchallenge.repository.CashflowRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
 import com.technicalchallenge.repository.TradeRepository;
 import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
+import com.technicalchallenge.repository.ApplicationUserRepository;
 import com.technicalchallenge.model.Schedule;
 import com.technicalchallenge.repository.ScheduleRepository;
+import com.technicalchallenge.model.Counterparty;
+import com.technicalchallenge.model.ApplicationUser;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +58,15 @@ class TradeServiceTest {
     @Mock
     private ScheduleRepository scheduleRepository;
 
+    @Mock 
+    private BookRepository bookRepository;
+
+    @Mock
+    private CounterpartyRepository counterpartyRepository;
+
+    @Mock
+    private ApplicationUserRepository applicationUserRepository;
+
     @InjectMocks
     private TradeService tradeService;
 
@@ -86,6 +102,22 @@ class TradeServiceTest {
         // Given
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
 
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(bookRepository.findByBookName("TestBook"))
+                .thenReturn(Optional.of(new Book()));
+        
+        when(counterpartyRepository.findByName("TestCounterparty"))
+                .thenReturn(Optional.of(new Counterparty()));
+        
+        when(tradeStatusRepository.findByTradeStatus("LIVE"))
+                .thenReturn(Optional.of(new TradeStatus()));
+        
+        tradeDTO.setBookName("TestBook");
+        tradeDTO.setCounterpartyName("TestCounterparty");
+        tradeDTO.setTradeStatus("LIVE");
+
         // When
         Trade result = tradeService.createTrade(tradeDTO);
 
@@ -97,7 +129,7 @@ class TradeServiceTest {
 
     @Test
     void testCreateTrade_InvalidDates_ShouldFail() {
-        // Given - This test is intentionally failing for candidates to fix
+        // Given
         tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before tradeDate that is set in BeforeEach
 
         // When & Then
@@ -105,7 +137,6 @@ class TradeServiceTest {
             tradeService.createTrade(tradeDTO);
         });
 
-        // This assertion is intentionally wrong - candidates need to fix it
         assertEquals("Start date cannot be before trade date", exception.getMessage());
     }
 
