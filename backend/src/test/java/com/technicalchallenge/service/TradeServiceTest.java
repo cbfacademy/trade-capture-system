@@ -2,15 +2,32 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.model.Cashflow;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.model.Book;
+import com.technicalchallenge.model.TradeStatus;
+import com.technicalchallenge.repository.BookRepository;
 import com.technicalchallenge.repository.CashflowRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
 import com.technicalchallenge.repository.TradeRepository;
 import com.technicalchallenge.repository.TradeStatusRepository;
+import com.technicalchallenge.repository.CounterpartyRepository;
+import com.technicalchallenge.repository.ApplicationUserRepository;
+import com.technicalchallenge.model.Schedule;
+import com.technicalchallenge.repository.ScheduleRepository;
+import com.technicalchallenge.model.Counterparty;
+import com.technicalchallenge.model.ApplicationUser;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +38,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +58,18 @@ class TradeServiceTest {
 
     @Mock
     private AdditionalInfoService additionalInfoService;
+
+    @Mock
+    private ScheduleRepository scheduleRepository;
+
+    @Mock
+    private BookRepository bookRepository;
+
+    @Mock
+    private CounterpartyRepository counterpartyRepository;
+
+    @Mock
+    private ApplicationUserRepository applicationUserRepository;
 
     @InjectMocks
     private TradeService tradeService;
@@ -76,6 +106,22 @@ class TradeServiceTest {
         // Given
         when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
 
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(bookRepository.findByBookName("TestBook"))
+                .thenReturn(Optional.of(new Book()));
+
+        when(counterpartyRepository.findByName("TestCounterparty"))
+                .thenReturn(Optional.of(new Counterparty()));
+
+        when(tradeStatusRepository.findByTradeStatus("LIVE"))
+                .thenReturn(Optional.of(new TradeStatus("LIVE")));
+
+        tradeDTO.setBookName("TestBook");
+        tradeDTO.setCounterpartyName("TestCounterparty");
+        tradeDTO.setTradeStatus("LIVE");
+
         // When
         Trade result = tradeService.createTrade(tradeDTO);
 
@@ -87,16 +133,15 @@ class TradeServiceTest {
 
     @Test
     void testCreateTrade_InvalidDates_ShouldFail() {
-        // Given - This test is intentionally failing for candidates to fix
-        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before trade date
+        // Given
+        tradeDTO.setTradeStartDate(LocalDate.of(2025, 1, 10)); // Before tradeDate that is set in BeforeEach
 
         // When & Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             tradeService.createTrade(tradeDTO);
         });
 
-        // This assertion is intentionally wrong - candidates need to fix it
-        assertEquals("Wrong error message", exception.getMessage());
+        assertEquals("Start date cannot be before trade date", exception.getMessage());
     }
 
     @Test
@@ -141,14 +186,28 @@ class TradeServiceTest {
     void testAmendTrade_Success() {
         // Given
         when(tradeRepository.findByTradeIdAndActiveTrue(100001L)).thenReturn(Optional.of(trade));
-        when(tradeStatusRepository.findByTradeStatus("AMENDED")).thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
-        when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+        when(tradeRepository.save(any(Trade.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(tradeStatusRepository.findByTradeStatus("AMENDED"))
+                .thenAnswer(invocation -> Optional.of(new TradeStatus("AMENDED")));
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // set version of the existing trade
+        trade.setVersion(1);
+        trade.setTradeStatus(new TradeStatus("LIVE"));
+
+        TradeStatus amendedStatus = new TradeStatus("AMENDED");
+        when(tradeStatusRepository.findByTradeStatus("AMENDED"))
+                .thenReturn(Optional.of(amendedStatus));
 
         // When
         Trade result = tradeService.amendTrade(100001L, tradeDTO);
 
         // Then
         assertNotNull(result);
+        assertEquals(2, result.getVersion());
+        assertEquals("AMENDED", result.getTradeStatus().getTradeStatus());
         verify(tradeRepository, times(2)).save(any(Trade.class)); // Save old and new
     }
 
@@ -168,16 +227,33 @@ class TradeServiceTest {
     // This test has a deliberate bug for candidates to find and fix
     @Test
     void testCashflowGeneration_MonthlySchedule() {
-        // This test method is incomplete and has logical errors
-        // Candidates need to implement proper cashflow testing
-
         // Given - setup is incomplete
-        TradeLeg leg = new TradeLeg();
-        leg.setNotional(BigDecimal.valueOf(1000000));
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(cashflowRepository.save(any(Cashflow.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When - method call is missing
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        schedule.setSchedule("1M");
 
-        // Then - assertions are wrong/missing
-        assertEquals(1, 12); // This will always fail - candidates need to fix
+        when(scheduleRepository.findBySchedule("MONTHLY"))
+                .thenReturn(Optional.of(schedule));
+
+        TradeLegDTO leg1 = tradeDTO.getTradeLegs().get(0);
+        leg1.setCalculationPeriodSchedule("MONTHLY");
+        leg1.setRate(0.05);
+
+        tradeDTO.setTradeLegs(Arrays.asList(leg1));
+
+        tradeService.createTradeLegsWithCashflows(tradeDTO, trade);
+
+        // Capture saved cashflows
+        ArgumentCaptor<Cashflow> captor = ArgumentCaptor.forClass(Cashflow.class);
+        verify(cashflowRepository, atLeastOnce()).save(captor.capture());
+
+        List<Cashflow> saved = captor.getAllValues();
+
+        assertEquals(12, saved.size());
     }
 }
