@@ -7,6 +7,7 @@ import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.model.TradeLeg;
 import com.technicalchallenge.model.TradeStatus;
 import com.technicalchallenge.model.Book;
+import com.technicalchallenge.model.TradeStatus;
 import com.technicalchallenge.repository.BookRepository;
 import com.technicalchallenge.repository.CashflowRepository;
 import com.technicalchallenge.repository.TradeLegRepository;
@@ -20,6 +21,9 @@ import com.technicalchallenge.model.Counterparty;
 import com.technicalchallenge.model.ApplicationUser;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +62,7 @@ class TradeServiceTest {
     @Mock
     private ScheduleRepository scheduleRepository;
 
-    @Mock 
+    @Mock
     private BookRepository bookRepository;
 
     @Mock
@@ -107,13 +111,13 @@ class TradeServiceTest {
 
         when(bookRepository.findByBookName("TestBook"))
                 .thenReturn(Optional.of(new Book()));
-        
+
         when(counterpartyRepository.findByName("TestCounterparty"))
                 .thenReturn(Optional.of(new Counterparty()));
-        
+
         when(tradeStatusRepository.findByTradeStatus("LIVE"))
-                .thenReturn(Optional.of(new TradeStatus()));
-        
+                .thenReturn(Optional.of(new TradeStatus("LIVE")));
+
         tradeDTO.setBookName("TestBook");
         tradeDTO.setCounterpartyName("TestCounterparty");
         tradeDTO.setTradeStatus("LIVE");
@@ -182,15 +186,28 @@ class TradeServiceTest {
     void testAmendTrade_Success() {
         // Given
         when(tradeRepository.findByTradeIdAndActiveTrue(100001L)).thenReturn(Optional.of(trade));
+        when(tradeRepository.save(any(Trade.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
         when(tradeStatusRepository.findByTradeStatus("AMENDED"))
-                .thenReturn(Optional.of(new com.technicalchallenge.model.TradeStatus()));
-        when(tradeRepository.save(any(Trade.class))).thenReturn(trade);
+                .thenAnswer(invocation -> Optional.of(new TradeStatus("AMENDED")));
+        when(tradeLegRepository.save(any(TradeLeg.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // set version of the existing trade
+        trade.setVersion(1);
+        trade.setTradeStatus(new TradeStatus("LIVE"));
+
+        TradeStatus amendedStatus = new TradeStatus("AMENDED");
+        when(tradeStatusRepository.findByTradeStatus("AMENDED"))
+                .thenReturn(Optional.of(amendedStatus));
 
         // When
         Trade result = tradeService.amendTrade(100001L, tradeDTO);
 
         // Then
         assertNotNull(result);
+        assertEquals(2, result.getVersion());
+        assertEquals("AMENDED", result.getTradeStatus().getTradeStatus());
         verify(tradeRepository, times(2)).save(any(Trade.class)); // Save old and new
     }
 
