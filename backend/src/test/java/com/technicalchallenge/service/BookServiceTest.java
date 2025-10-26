@@ -1,34 +1,63 @@
 package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.BookDTO;
+import com.technicalchallenge.dto.TradeDTO;
+import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.mapper.BookMapper;
 import com.technicalchallenge.model.Book;
+import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.repository.BookRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
     @Mock
     private BookRepository bookRepository;
+
+    @Mock
+    private BookMapper bookMapper;
+
     @InjectMocks
     private BookService bookService;
 
+    private Book book;
+    private BookDTO bookDTO;
+
+    @BeforeEach
+    void setUp() {
+        bookDTO = new BookDTO();
+        bookDTO.setId(1L);
+        bookDTO.setBookName("Test Book");
+
+        book = new Book();
+        book.setId(1L);
+        book.setBookName("Test Book");
+    }
+
     @Test
     void testFindBookById() {
-        Book book = new Book();
-        book.setId(1L);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(bookMapper.toDto(book)).thenReturn(bookDTO);
+
         Optional<BookDTO> found = bookService.getBookById(1L);
+
         assertTrue(found.isPresent());
         assertEquals(1L, found.get().getId());
+        assertEquals("Test Book", found.get().getBookName());
     }
 
     @Test
