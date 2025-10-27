@@ -2,6 +2,7 @@ package com.technicalchallenge.service;
 
 import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.dto.TradeLegDTO;
+import com.technicalchallenge.dto.ValidationResult;
 import com.technicalchallenge.model.*;
 import com.technicalchallenge.repository.*;
 import org.junit.jupiter.api.Test;
