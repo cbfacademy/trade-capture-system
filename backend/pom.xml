@@ -112,18 +112,7 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-    
-     
-
-        <!-- Hibernate (JPA implementation) -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.2.7.Final</version> <!-- or compatible version -->
-        </dependency>
-
     </dependencies>
-       
 
     <build>
         <plugins>

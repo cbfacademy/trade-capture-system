@@ -32,6 +32,7 @@ public class UserControllerTest {
     @MockBean
     private UserProfileService userProfileService;
 
+    
 
     @BeforeEach
     public void setup() {
