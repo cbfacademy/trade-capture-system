@@ -11,13 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -60,6 +67,9 @@ public class UserControllerTest {
         when(applicationUserService.getAllUsers()).thenReturn(List.of(applicationUser));
         when(applicationUserMapper.toDto(any())).thenReturn(userDTO);
         when(applicationUserMapper.toEntity(any())).thenReturn(applicationUser);
+        when(applicationUserService.getUserById(anyLong())).thenReturn(Optional.of(applicationUser));
+        doNothing().when(applicationUserService).deleteUser(anyLong());
+
 
     }
 
@@ -69,4 +79,27 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
     // Add more tests for POST, PUT, DELETE as needed
+    @Test
+    void shouldCreateUser() throws Exception {
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"active\":true,\"userProfile\":\"TRADER\"}"))
+                .andExpect(status().isCreated());
+    }
+    @Test
+    void shouldUpdateUser() throws Exception {
+        mockMvc.perform(put("/api/users/{id}", 2L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"active\":true,\"userProfile\":\"TRADER\"}"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void shouldDeleteUser() throws Exception {
+        mockMvc.perform(delete("/api/users/{id}", 2L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+
+
 }
