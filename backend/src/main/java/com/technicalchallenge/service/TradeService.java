@@ -702,22 +702,6 @@ public class TradeService {
     /**
      * Simple RSQL-style query support
      */
-
-     private String extractSimpleValue(String query, String key) {
-        int startIndex = query.indexOf(key) + key.length();
-        int endIndex = startIndex;
-        
-        // Find end of value (semicolon, comma, or end of string)
-        while (endIndex < query.length() &&
-               query.charAt(endIndex) != ';' &&
-               query.charAt(endIndex) != ',' &&
-               query.charAt(endIndex) != ')') {
-            endIndex++;
-        }
-        
-        return query.substring(startIndex, endIndex).trim();
-    }
-    
     public List<Trade> searchTradesRsql(String query) {
         logger.info("RSQL query search: {}", query);
         
@@ -750,6 +734,19 @@ public class TradeService {
         }
     }
     
-    
+    private String extractSimpleValue(String query, String key) {
+        int startIndex = query.indexOf(key) + key.length();
+        int endIndex = startIndex;
+        
+        // Find end of value (semicolon, comma, or end of string)
+        while (endIndex < query.length() &&
+               query.charAt(endIndex) != ';' &&
+               query.charAt(endIndex) != ',' &&
+               query.charAt(endIndex) != ')') {
+            endIndex++;
+        }
+        
+        return query.substring(startIndex, endIndex).trim();
+    }
 
 }

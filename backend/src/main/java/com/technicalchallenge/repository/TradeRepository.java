@@ -55,9 +55,4 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
     // Find with pagination (basic)
     @Query("SELECT t FROM Trade t WHERE t.active = true ORDER BY t.tradeDate DESC")
     Page<Trade> findAllActivePaginated(Pageable pageable);
-
-    List<Trade> findByTradeStatus_TradeStatus(String tradeStatus);
-    List<Trade> findByBook_BookName(String bookName);
-    List<Trade> findByTraderUser_UserType(String userType);
-
 }

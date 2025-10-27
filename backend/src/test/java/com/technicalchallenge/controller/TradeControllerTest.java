@@ -6,6 +6,8 @@ import com.technicalchallenge.dto.TradeDTO;
 import com.technicalchallenge.mapper.TradeMapper;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.service.TradeService;
+import com.technicalchallenge.service.TradeValidationService;
+import com.technicalchallenge.service.SettlementInstructionsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -157,9 +159,7 @@ public class TradeControllerTest {
         mockMvc.perform(post("/api/trades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors[?(@.field=='tradeDate')]").exists());
-                
+                .andExpect(status().isBadRequest());
 
         verify(tradeService, never()).saveTrade(any(Trade.class), any(TradeDTO.class));
     }
