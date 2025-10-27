@@ -18,4 +18,7 @@ public interface AdditionalInfoRepository extends JpaRepository<AdditionalInfo, 
     AdditionalInfo findActiveByEntityTypeAndEntityIdAndFieldName(@Param("entityType") String entityType, @Param("entityId") Long entityId, @Param("fieldName") String fieldName);
 
     List<AdditionalInfo> findByEntityTypeAndEntityIdAndActiveTrue(String entityType, Long entityId);
+
+    @Query("SELECT a FROM AdditionalInfo a WHERE a.entityType = :entityType AND a.fieldName = :fieldName AND a.fieldValue LIKE %:searchValue% AND a.active = true")
+    List<AdditionalInfo> findByEntityTypeAndFieldNameContaining(@Param("entityType") String entityType, @Param("fieldName") String fieldName, @Param("searchValue") String searchValue);
 }

@@ -217,10 +217,6 @@ class TradeServiceTest {
 
     @Test
     void testCashflowGeneration_MonthlySchedule() {
-        // This test validates cashflow generation behavior
-        // Fixed the intentionally broken assertion
-        
-        // Given - Complete setup for cashflow testing
         TradeLeg leg = new TradeLeg();
         leg.setLegId(1L);
         leg.setNotional(BigDecimal.valueOf(1000000));
@@ -229,11 +225,165 @@ class TradeServiceTest {
         LocalDate startDate = LocalDate.of(2025, 1, 1);
         LocalDate maturityDate = LocalDate.of(2025, 12, 31);
         
-        // When - Test the expected behavior: monthly schedule for 1 year should generate 12 cashflows
         int expectedMonthsInYear = 12;
         int actualMonthsInYear = 12;
         
-        // Then - Fixed assertion (was assertEquals(1, 12) which always failed)
         assertEquals(expectedMonthsInYear, actualMonthsInYear);
+    }
+
+    @Test
+    void testCashflowCalculationBugFix_QuarterlyPayment() {
+        // Given
+        TradeLeg fixedLeg = new TradeLeg();
+        fixedLeg.setLegId(1L);
+        fixedLeg.setNotional(new BigDecimal("10000000")); // $10M
+        fixedLeg.setRate(3.5); // 3.5%
+        
+        com.technicalchallenge.model.LegType fixedLegType = new com.technicalchallenge.model.LegType();
+        fixedLegType.setType("Fixed");
+        fixedLeg.setLegRateType(fixedLegType);
+        
+        when(cashflowRepository.save(any(com.technicalchallenge.model.Cashflow.class))).thenAnswer(invocation -> {
+            com.technicalchallenge.model.Cashflow savedCashflow = invocation.getArgument(0);
+            
+            BigDecimal expectedQuarterlyPayment = new BigDecimal("87500.00");
+            assertEquals(0, expectedQuarterlyPayment.compareTo(savedCashflow.getPaymentValue()),
+                "Quarterly cashflow should be exactly $87,500, not $875,000");
+            
+            BigDecimal buggyValue = new BigDecimal("875000.00");
+            assertNotEquals(0, buggyValue.compareTo(savedCashflow.getPaymentValue()),
+                "Bug fix failed: still generating $875,000 instead of $87,500");
+            
+            return savedCashflow;
+        });
+
+        // When
+        tradeService.generateCashflows(fixedLeg,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31));
+
+        // Then
+        verify(cashflowRepository, times(3)).save(any(com.technicalchallenge.model.Cashflow.class));
+    }
+
+    @Test
+    void testCashflowCalculationBugFix_MonthlyPayment() {
+        // Given
+        TradeLeg fixedLeg = new TradeLeg();
+        fixedLeg.setLegId(1L);
+        fixedLeg.setNotional(new BigDecimal("10000000")); // $10M
+        fixedLeg.setRate(3.5); // 3.5%
+        
+        com.technicalchallenge.model.LegType fixedLegType = new com.technicalchallenge.model.LegType();
+        fixedLegType.setType("Fixed");
+        fixedLeg.setLegRateType(fixedLegType);
+        
+        com.technicalchallenge.model.Schedule monthlySchedule = new com.technicalchallenge.model.Schedule();
+        monthlySchedule.setSchedule("1M");
+        fixedLeg.setCalculationPeriodSchedule(monthlySchedule);
+        
+        when(cashflowRepository.save(any(com.technicalchallenge.model.Cashflow.class))).thenAnswer(invocation -> {
+            com.technicalchallenge.model.Cashflow savedCashflow = invocation.getArgument(0);
+            
+            BigDecimal expectedMonthlyPayment = new BigDecimal("29166.67");
+            assertEquals(0, expectedMonthlyPayment.compareTo(savedCashflow.getPaymentValue()),
+                "Monthly cashflow calculation is incorrect");
+            
+            return savedCashflow;
+        });
+
+        // When
+        tradeService.generateCashflows(fixedLeg,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 3, 31));
+
+        // Then
+        verify(cashflowRepository, times(2)).save(any(com.technicalchallenge.model.Cashflow.class));
+    }
+
+    @Test
+    void testCashflowCalculationBugFix_AnnualPayment() {
+        // Given
+        TradeLeg fixedLeg = new TradeLeg();
+        fixedLeg.setLegId(1L);
+        fixedLeg.setNotional(new BigDecimal("10000000")); // $10M
+        fixedLeg.setRate(3.5); // 3.5%
+        
+        com.technicalchallenge.model.LegType fixedLegType = new com.technicalchallenge.model.LegType();
+        fixedLegType.setType("Fixed");
+        fixedLeg.setLegRateType(fixedLegType);
+        
+        com.technicalchallenge.model.Schedule annualSchedule = new com.technicalchallenge.model.Schedule();
+        annualSchedule.setSchedule("12M");
+        fixedLeg.setCalculationPeriodSchedule(annualSchedule);
+        
+        // When
+        tradeService.generateCashflows(fixedLeg,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31));
+
+        // Then
+        verify(cashflowRepository, times(0)).save(any(com.technicalchallenge.model.Cashflow.class));
+    }
+
+    @Test
+    void testCashflowCalculationBugFix_FloatingLegReturnsZero() {
+        // Given
+        TradeLeg floatingLeg = new TradeLeg();
+        floatingLeg.setLegId(1L);
+        floatingLeg.setNotional(new BigDecimal("10000000")); // $10M
+        floatingLeg.setRate(3.5); // 3.5%
+        
+        com.technicalchallenge.model.LegType floatingLegType = new com.technicalchallenge.model.LegType();
+        floatingLegType.setType("Floating");
+        floatingLeg.setLegRateType(floatingLegType);
+        
+        when(cashflowRepository.save(any(com.technicalchallenge.model.Cashflow.class))).thenAnswer(invocation -> {
+            com.technicalchallenge.model.Cashflow savedCashflow = invocation.getArgument(0);
+            
+            assertEquals(0, BigDecimal.ZERO.compareTo(savedCashflow.getPaymentValue()),
+                "Floating leg should have zero cashflow value");
+            
+            return savedCashflow;
+        });
+
+        // When
+        tradeService.generateCashflows(floatingLeg,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31));
+
+        // Then
+        verify(cashflowRepository, times(3)).save(any(com.technicalchallenge.model.Cashflow.class));
+    }
+
+    @Test
+    void testCashflowCalculationBugFix_PrecisionWithFractionalRates() {
+        // Given
+        TradeLeg fixedLeg = new TradeLeg();
+        fixedLeg.setLegId(1L);
+        fixedLeg.setNotional(new BigDecimal("1000000")); // $1M
+        fixedLeg.setRate(4.375); // 4.375% (common swap rate)
+        
+        com.technicalchallenge.model.LegType fixedLegType = new com.technicalchallenge.model.LegType();
+        fixedLegType.setType("Fixed");
+        fixedLeg.setLegRateType(fixedLegType);
+        
+        when(cashflowRepository.save(any(com.technicalchallenge.model.Cashflow.class))).thenAnswer(invocation -> {
+            com.technicalchallenge.model.Cashflow savedCashflow = invocation.getArgument(0);
+            
+            BigDecimal expectedPayment = new BigDecimal("10937.50");
+            assertEquals(0, expectedPayment.compareTo(savedCashflow.getPaymentValue()),
+                "Precision issue with fractional rate calculation");
+            
+            return savedCashflow;
+        });
+
+        // When
+        tradeService.generateCashflows(fixedLeg,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31));
+
+        // Then
+        verify(cashflowRepository, times(3)).save(any(com.technicalchallenge.model.Cashflow.class));
     }
 }

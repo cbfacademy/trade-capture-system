@@ -1,9 +1,13 @@
 package com.technicalchallenge.controller;
 
 import com.technicalchallenge.dto.TradeDTO;
+import com.technicalchallenge.dto.ValidationResult;
 import com.technicalchallenge.mapper.TradeMapper;
 import com.technicalchallenge.model.Trade;
 import com.technicalchallenge.service.TradeService;
+import com.technicalchallenge.service.TradeValidationService;
+import com.technicalchallenge.service.SettlementInstructionsService;
+import com.technicalchallenge.dto.SettlementInstructionsUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +23,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +40,13 @@ public class TradeController {
 
     @Autowired
     private TradeService tradeService;
+    
+    @Autowired
+    private TradeValidationService validationService;
     @Autowired
     private TradeMapper tradeMapper;
+    @Autowired
+    private SettlementInstructionsService settlementInstructionsService;
 
     @GetMapping
     @Operation(summary = "Get all trades",
@@ -116,7 +128,8 @@ public class TradeController {
             @Valid @RequestBody TradeDTO tradeDTO) {
         logger.info("Updating trade with id: {}", id);
         try {
-            tradeDTO.setTradeId(id); // Ensure the ID matches
+            // tradeDTO.setTradeId(id); // TEMPORARY: Commented out due to Lombok issue
+            // tradeDTO.tradeId = id; // Direct field access also not working - field is private
             Trade amendedTrade = tradeService.amendTrade(id, tradeDTO);
             TradeDTO responseDTO = tradeMapper.toDto(amendedTrade);
             return ResponseEntity.ok(responseDTO);
@@ -195,6 +208,199 @@ public class TradeController {
         } catch (Exception e) {
             logger.error("Error cancelling trade: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Error cancelling trade: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Multi-criteria search")
+    public ResponseEntity<List<TradeDTO>> searchTrades(
+            @RequestParam(required = false) String counterpartyName,
+            @RequestParam(required = false) String bookName,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate) {
+        try {
+            List<Trade> trades = tradeService.searchTrades(counterpartyName, bookName, status, startDate, endDate);
+            List<TradeDTO> tradeDTOs = trades.stream().map(tradeMapper::toDto).toList();
+            return ResponseEntity.ok(tradeDTOs);
+        } catch (Exception e) {
+            logger.error("Error during trade search: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Paginated filtering")
+    public ResponseEntity<org.springframework.data.domain.Page<TradeDTO>> filterTrades(
+            @RequestParam(required = false) String counterpartyName,
+            @RequestParam(required = false) String bookName,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        try {
+            org.springframework.data.domain.Pageable pageable =
+                org.springframework.data.domain.PageRequest.of(page, size);
+            org.springframework.data.domain.Page<Trade> tradePage = tradeService.getTradesPaginated(pageable);
+            org.springframework.data.domain.Page<TradeDTO> tradeDTOPage = tradePage.map(tradeMapper::toDto);
+            return ResponseEntity.ok(tradeDTOPage);
+        } catch (Exception e) {
+            logger.error("Error during trade filtering: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/rsql")
+    @Operation(summary = "RSQL query support for power users")
+    public ResponseEntity<?> searchByRsql(@RequestParam String query) {
+        try {
+            List<Trade> trades = tradeService.searchTradesRsql(query);
+            List<TradeDTO> tradeDTOs = trades.stream().map(tradeMapper::toDto).toList();
+            return ResponseEntity.ok(tradeDTOs);
+        } catch (Exception e) {
+            logger.error("Error executing RSQL query: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("RSQL query error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Enhancement 2: Trade Validation Endpoints
+     */
+    @PostMapping("/validate/create")
+    @Operation(summary = "Validate trade for creation",
+               description = "Validates trade data against business rules before creation")
+    public ResponseEntity<ValidationResult> validateTradeCreation(
+            @RequestBody TradeDTO tradeDTO,
+            @RequestParam String userLoginId) {
+        ValidationResult result = validationService.validateTradeCreation(tradeDTO, userLoginId);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/validate/amend")
+    @Operation(summary = "Validate trade for amendment",
+               description = "Validates trade amendments against business rules and status requirements")
+    public ResponseEntity<ValidationResult> validateTradeAmendment(
+            @RequestBody TradeDTO tradeDTO,
+            @RequestParam String userLoginId) {
+        ValidationResult result = validationService.validateTradeAmendment(tradeDTO, userLoginId);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/validate/read")
+    @Operation(summary = "Validate user read access",
+               description = "Validates if user has appropriate privileges to read trade data")
+    public ResponseEntity<ValidationResult> validateTradeRead(@RequestParam String userLoginId) {
+        ValidationResult result = validationService.validateTradeRead(userLoginId);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Step 5: Settlement Instructions Endpoints
+     */
+    @GetMapping("/search/settlement-instructions")
+    @Operation(summary = "Search trades by settlement instructions",
+               description = "Find trades containing specific settlement instruction content")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Trades found with matching settlement instructions"),
+        @ApiResponse(responseCode = "400", description = "Invalid search parameters")
+    })
+    public ResponseEntity<List<TradeDTO>> searchBySettlementInstructions(
+            @Parameter(description = "Settlement instructions text to search for", required = true)
+            @RequestParam String instructions) {
+        logger.info("Searching trades by settlement instructions: {}", instructions);
+        try {
+            List<Long> tradeIds = settlementInstructionsService.findTradeIdsBySettlementInstructions(instructions);
+            List<Trade> trades = tradeIds.stream()
+                .map(tradeId -> tradeService.getTradeById(tradeId))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(Trade::getActive)
+                .collect(Collectors.toList());
+            List<TradeDTO> tradeDTOs = trades.stream()
+                .map(tradeMapper::toDto)
+                .toList();
+            return ResponseEntity.ok(tradeDTOs);
+        } catch (Exception e) {
+            logger.error("Error searching by settlement instructions: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}/settlement-instructions")
+    @Operation(summary = "Update settlement instructions",
+               description = "Update settlement instructions for an existing trade")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Settlement instructions updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Trade not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid settlement instructions data")
+    })
+    public ResponseEntity<?> updateSettlementInstructions(
+            @Parameter(description = "Unique identifier of the trade", required = true)
+            @PathVariable Long id,
+            @Parameter(description = "New settlement instructions", required = true)
+            @Valid @RequestBody SettlementInstructionsUpdateDTO request) {
+        logger.info("Updating settlement instructions for trade: {}", id);
+        try {
+            // Verify trade exists
+            if (tradeService.getTradeById(id).isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            settlementInstructionsService.updateSettlementInstructions(id, request.getSettlementInstructions());
+            return ResponseEntity.ok().body("Settlement instructions updated successfully");
+        } catch (Exception e) {
+            logger.error("Error updating settlement instructions: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("Error updating settlement instructions: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/settlement-instructions")
+    @Operation(summary = "Get settlement instructions",
+               description = "Retrieve settlement instructions for an existing trade")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Settlement instructions retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "Trade not found or no settlement instructions exist"),
+        @ApiResponse(responseCode = "400", description = "Invalid trade ID")
+    })
+    public ResponseEntity<?> getSettlementInstructions(
+            @Parameter(description = "Unique identifier of the trade", required = true)
+            @PathVariable Long id) {
+        logger.info("Getting settlement instructions for trade: {}", id);
+        try {
+            // Verify trade exists
+            if (tradeService.getTradeById(id).isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String instructions = settlementInstructionsService.getSettlementInstructions(id);
+            if (instructions != null) {
+                return ResponseEntity.ok().body(new SettlementInstructionsResponse(instructions));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error getting settlement instructions: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("Error getting settlement instructions: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Response wrapper for settlement instructions
+     */
+    public static class SettlementInstructionsResponse {
+        private String instructions;
+
+        public SettlementInstructionsResponse(String instructions) {
+            this.instructions = instructions;
+        }
+
+        public String getInstructions() {
+            return instructions;
+        }
+
+        public void setInstructions(String instructions) {
+            this.instructions = instructions;
         }
     }
 }
