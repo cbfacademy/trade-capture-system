@@ -247,6 +247,6 @@ public class TradeControllerTest {
                         .content(objectMapper.writeValueAsString(invalidDTO)))
                 .andExpect(status().isBadRequest());
 
-        verify(tradeService, never()).createTrade(any(TradeDTO.class));
+        verify(tradeService, never()).createTrade(any(TradeDTO.class))
     }
 }

@@ -746,7 +746,7 @@ public class TradeService {
             endIndex++;
         }
         
-        return query.substring(startIndex, endIndex).trim();
+        return query.substring(startIndex, endIndex).trim()
     }
 
 }

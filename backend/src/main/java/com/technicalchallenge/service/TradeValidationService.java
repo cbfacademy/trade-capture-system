@@ -161,7 +161,7 @@ public class TradeValidationService {
             long receiveCount = legs.stream().filter(leg -> Long.valueOf(1001L).equals(leg.getPayRecId())).count();
             
             if (payCount == 0 || receiveCount == 0) {
-                result.addWarning("Trade should have both pay and receive legs");
+                result.addWarning("Trade should have both pay and receive legs")
             }
         }
     }
