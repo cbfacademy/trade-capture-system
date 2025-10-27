@@ -103,6 +103,6 @@ public class TradeValidationControllerTest {
                         .param("userLoginId", "testuser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(tradeDTO)))
-                .andExpect(status().isOk())
+                .andExpect(status().isOk());
     }
 }
