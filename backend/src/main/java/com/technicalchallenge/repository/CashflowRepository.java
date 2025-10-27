@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CashflowRepository extends JpaRepository<Cashflow, Long> {
-    // Custom query methods if needed
+    Long countByTradeLegTradeTradeId(Long tradeId);
 }

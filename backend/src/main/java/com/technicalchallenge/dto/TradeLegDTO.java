@@ -9,6 +9,7 @@ import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -44,6 +45,7 @@ public class TradeLegDTO {
     // Schedule reference
     private Long scheduleId;
     private String calculationPeriodSchedule;
+    private LocalDate maturityDate;
 
     // Business day convention references
     private Long paymentBdcId;
@@ -57,4 +59,5 @@ public class TradeLegDTO {
 
     // Associated cashflows
     private List<CashflowDTO> cashflows;
+    
 }
