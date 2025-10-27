@@ -55,7 +55,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({field, value, disabled, on
         <Input
             size="md"
             value={typeof value === 'string' || typeof value === 'number' ? value.toString() : ""}
-            onChange={onChange}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
             type={field.type === "date" ? "date" : "text"}
             disabled={disabled}
             className={commonClass}

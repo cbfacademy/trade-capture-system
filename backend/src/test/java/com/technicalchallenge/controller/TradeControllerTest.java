@@ -41,13 +41,6 @@ public class TradeControllerTest {
 
     @MockBean
     private TradeMapper tradeMapper;
-
-    @MockBean
-    private TradeValidationService tradeValidationService;
-
-    @MockBean
-    private SettlementInstructionsService settlementInstructionsService;
-
     private ObjectMapper objectMapper;
     private TradeDTO tradeDTO;
     private Trade trade;
